@@ -19,18 +19,15 @@ public class Player extends AbstractMovingModel {
 
     public void update(float touchX, float touchY) {
         // Преобразуем координаты касания в относительные к координатной сетке игры
-        float gameX = touchX / Gdx.graphics.getWidth() * Gdx.graphics.getWidth();
         float gameY = touchY / Gdx.graphics.getHeight() * Gdx.graphics.getHeight();
 
-        if (gameX > x + width) {
+        if (touchX > Gdx.graphics.getWidth() / 2) {
             moveRight();
-        }
-
-        // Проверяем, находится ли касание левее персонажа
-        if (gameX < x) {
+        } else{
             moveLeft();
-        }
     }
+
+}
 
     private void moveRight() {
         x += speed;
