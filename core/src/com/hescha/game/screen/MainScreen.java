@@ -4,7 +4,6 @@ import static com.hescha.game.util.Settings.SCREEN_HEIGHT;
 import static com.hescha.game.util.Settings.SCREEN_WIDTH;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -35,7 +34,7 @@ public class MainScreen extends ScreenAdapter {
         camera.update();
         viewport = new FitViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         viewport.apply(true);
-        
+
         // init game related fields
         player = new Player();
 
@@ -46,24 +45,22 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        update();
+
+        draw();
+    }
+
+    private void update() {
         // Определяем координаты касания пользователя
-        float touchX = Gdx.input.getX();
-        float touchY = Gdx.input.getY();
         boolean touched = Gdx.input.isTouched();
-
-        // Преобразуем координаты касания в относительные к координатной сетке игры
-        float gameX = touchX / Gdx.graphics.getWidth() * Gdx.graphics.getWidth();
-        float gameY = touchY / Gdx.graphics.getHeight() * Gdx.graphics.getHeight();
-
-        if (touched && gameX > player.getX()) {
-            player.moveRight();
+        if (touched) {
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.input.getY();
+            player.update(touchX, touchY);
         }
+    }
 
-        // Проверяем, находится ли касание левее персонажа
-        if (touched && gameX < player.getX()) {
-            player.moveLeft();
-        }
-
+    private void draw() {
         ScreenUtils.clear(BACKGROUND_COLOR);
 
         batch.setProjectionMatrix(camera.projection);
