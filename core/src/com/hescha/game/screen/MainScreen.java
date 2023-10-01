@@ -1,31 +1,85 @@
 package com.hescha.game.screen;
 
+import static com.hescha.game.util.Settings.SCREEN_HEIGHT;
+import static com.hescha.game.util.Settings.SCREEN_WIDTH;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.hescha.game.model.Player;
 
 public class MainScreen extends ScreenAdapter {
-    SpriteBatch batch;
-    Texture img;
+    //static data
+    public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
+
+    //required fields
+    private SpriteBatch batch;
+    private Viewport viewport;
+    private OrthographicCamera camera;
+
+    // game related fields
+    private Player player;
 
     @Override
-    public void show () {
+    public void show() {
+        //init required technical fields
         batch = new SpriteBatch();
-        img = new Texture("badlogic.jpg");
+        camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
+        camera.update();
+        viewport = new FitViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+        viewport.apply(true);
+        
+        // init game related fields
+        player = new Player();
+
+        // fill necessary data
+        player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
+        player.setY(SCREEN_HEIGHT / 3);
     }
 
     @Override
-    public void render (float delta) {
-        ScreenUtils.clear(1, 0, 0, 1);
+    public void render(float delta) {
+        // Определяем координаты касания пользователя
+        float touchX = Gdx.input.getX();
+        float touchY = Gdx.input.getY();
+        boolean touched = Gdx.input.isTouched();
+
+        // Преобразуем координаты касания в относительные к координатной сетке игры
+        float gameX = touchX / Gdx.graphics.getWidth() * Gdx.graphics.getWidth();
+        float gameY = touchY / Gdx.graphics.getHeight() * Gdx.graphics.getHeight();
+
+        if (touched && gameX > player.getX()) {
+            player.moveRight();
+        }
+
+        // Проверяем, находится ли касание левее персонажа
+        if (touched && gameX < player.getX()) {
+            player.moveLeft();
+        }
+
+        ScreenUtils.clear(BACKGROUND_COLOR);
+
+        batch.setProjectionMatrix(camera.projection);
+        batch.setTransformMatrix(camera.view);
         batch.begin();
-        batch.draw(img, 0, 0);
+        player.draw(batch);
         batch.end();
     }
 
     @Override
-    public void dispose () {
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
+
+    @Override
+    public void dispose() {
         batch.dispose();
-        img.dispose();
     }
 }
