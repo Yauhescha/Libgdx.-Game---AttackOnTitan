@@ -1,24 +1,20 @@
 package com.hescha.game.model;
 
+import static com.hescha.game.util.Settings.SCREEN_WIDTH;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.hescha.game.util.Settings;
 
 import lombok.Data;
 
 @Data
-public class Player {
-    private int x;
-    private int y;
-    private int width = 144;
-    private int height = 144;
-    private int speed = 10;
+public class Player extends AbstractMovingModel {
 
-    private Texture texture = new Texture("badlogic.jpg");
-
-    public void draw(SpriteBatch batch) {
-        batch.draw(texture, x, y, width, height);
+    public Player() {
+        width = 144;
+        height = 144;
+        speed = 10;
+        texture = new Texture("badlogic.jpg");
     }
 
     public void update(float touchX, float touchY) {
@@ -38,7 +34,7 @@ public class Player {
 
     private void moveRight() {
         x += speed;
-        if (x > Settings.SCREEN_WIDTH - width) x = Settings.SCREEN_WIDTH - width;
+        if (x > SCREEN_WIDTH - width) x = SCREEN_WIDTH - width;
     }
 
     private void moveLeft() {

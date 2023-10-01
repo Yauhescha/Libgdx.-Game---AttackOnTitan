@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
 
 public class MainScreen extends ScreenAdapter {
@@ -24,6 +25,7 @@ public class MainScreen extends ScreenAdapter {
 
     // game related fields
     private Player player;
+    private Enemy enemy;
 
     @Override
     public void show() {
@@ -37,10 +39,13 @@ public class MainScreen extends ScreenAdapter {
 
         // init game related fields
         player = new Player();
+        enemy = new Enemy();
 
         // fill necessary data
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 3);
+
+        enemy.setRandomRunWay();
     }
 
     @Override
@@ -51,12 +56,20 @@ public class MainScreen extends ScreenAdapter {
     }
 
     private void update() {
-        // Определяем координаты касания пользователя
+        // update player
         boolean touched = Gdx.input.isTouched();
         if (touched) {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.input.getY();
             player.update(touchX, touchY);
+        }
+
+
+        //update enemy
+        if (enemy.canMove()) {
+            enemy.moveDown();
+        } else {
+            enemy.setRandomRunWay();
         }
     }
 
@@ -67,6 +80,7 @@ public class MainScreen extends ScreenAdapter {
         batch.setTransformMatrix(camera.view);
         batch.begin();
         player.draw(batch);
+        enemy.draw(batch);
         batch.end();
     }
 
