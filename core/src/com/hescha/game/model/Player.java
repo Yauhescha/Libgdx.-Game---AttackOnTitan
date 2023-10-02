@@ -14,7 +14,7 @@ public class Player extends AbstractMovingModel {
         width = 144;
         height = 144;
         speed = 10;
-        texture = new Texture("badlogic.jpg");
+        texture = new Texture("player.png");
     }
 
     public void update(float touchX, float touchY) {

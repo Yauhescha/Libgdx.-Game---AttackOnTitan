@@ -7,16 +7,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
+
+import java.util.List;
 
 public class MainScreen extends ScreenAdapter {
     //static data
     public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
+    public static final Texture BACKGROUND_TEXTURE = new Texture(Gdx.files.internal("street.png"));
 
     //required fields
     private SpriteBatch batch;
@@ -26,6 +32,7 @@ public class MainScreen extends ScreenAdapter {
     // game related fields
     private Player player;
     private Enemy enemy;
+    private List<Background> backgrounds;
 
     @Override
     public void show() {
@@ -34,12 +41,13 @@ public class MainScreen extends ScreenAdapter {
         camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT);
         camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
         camera.update();
-        viewport = new FitViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+        viewport = new FillViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         viewport.apply(true);
 
         // init game related fields
         player = new Player();
         enemy = new Enemy();
+        backgrounds = Background.getBackgrounds();
 
         // fill necessary data
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
@@ -56,6 +64,11 @@ public class MainScreen extends ScreenAdapter {
     }
 
     private void update() {
+        //update background
+        for (Background background : backgrounds) {
+            background.update();
+        }
+
         // update player
         boolean touched = Gdx.input.isTouched();
         if (touched) {
@@ -79,6 +92,10 @@ public class MainScreen extends ScreenAdapter {
         batch.setProjectionMatrix(camera.projection);
         batch.setTransformMatrix(camera.view);
         batch.begin();
+//        batch.draw(BACKGROUND_TEXTURE,-128, 0);
+        for (Background background : backgrounds) {
+            background.draw(batch);
+        }
         player.draw(batch);
         enemy.draw(batch);
         batch.end();
