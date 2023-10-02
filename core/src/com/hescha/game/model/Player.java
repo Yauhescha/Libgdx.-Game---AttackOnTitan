@@ -18,16 +18,12 @@ public class Player extends AbstractMovingModel {
     }
 
     public void update(float touchX, float touchY) {
-        // Преобразуем координаты касания в относительные к координатной сетке игры
-        float gameY = touchY / Gdx.graphics.getHeight() * Gdx.graphics.getHeight();
-
         if (touchX > Gdx.graphics.getWidth() / 2) {
             moveRight();
-        } else{
+        } else {
             moveLeft();
+        }
     }
-
-}
 
     private void moveRight() {
         x += speed;

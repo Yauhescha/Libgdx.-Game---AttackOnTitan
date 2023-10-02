@@ -32,7 +32,7 @@ public class Background extends AbstractMovingModel {
     public Background() {
         x = -400;
         y = 0;
-        width = 1024+512;
+        width = 1024 + 512;
         height = 1024;
         speed = 5;
         texture = new Texture("street.png");
@@ -55,7 +55,7 @@ public class Background extends AbstractMovingModel {
     }
 
     private void moveToTop(int time) {
-        y=y+getHeight() * time;
+        y = y + getHeight() * time;
     }
 
 }

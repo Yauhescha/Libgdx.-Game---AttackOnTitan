@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
@@ -92,7 +91,6 @@ public class MainScreen extends ScreenAdapter {
         batch.setProjectionMatrix(camera.projection);
         batch.setTransformMatrix(camera.view);
         batch.begin();
-//        batch.draw(BACKGROUND_TEXTURE,-128, 0);
         for (Background background : backgrounds) {
             background.draw(batch);
         }

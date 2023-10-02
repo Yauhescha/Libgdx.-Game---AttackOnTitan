@@ -1,6 +1,5 @@
 package com.hescha.game.model;
 
-import static com.hescha.game.util.Settings.SCREEN_HEIGHT;
 import static com.hescha.game.util.Settings.SCREEN_WIDTH;
 
 import com.badlogic.gdx.Gdx;
@@ -27,7 +26,7 @@ public class Enemy extends AbstractMovingModel {
     }
 
     public boolean canMove() {
-        return y + height*2 >= 0;
+        return y + height * 2 >= 0;
     }
 
     public void setRandomRunWay() {
