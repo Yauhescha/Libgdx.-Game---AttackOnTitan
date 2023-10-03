@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -25,6 +26,7 @@ public class MainScreen extends ScreenAdapter {
 
     //required fields
     private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -37,6 +39,7 @@ public class MainScreen extends ScreenAdapter {
     public void show() {
         //init required technical fields
         batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT);
         camera.position.set(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
         camera.update();
@@ -60,6 +63,7 @@ public class MainScreen extends ScreenAdapter {
         update();
 
         draw();
+        drawDebug();
     }
 
     private void update() {
@@ -97,6 +101,16 @@ public class MainScreen extends ScreenAdapter {
         player.draw(batch);
         enemy.draw(batch);
         batch.end();
+    }
+
+    private void drawDebug() {
+        shapeRenderer.setProjectionMatrix(camera.projection);
+        shapeRenderer.setTransformMatrix(camera.view);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+       enemy.drawDebug(shapeRenderer);
+
+        shapeRenderer.end();
     }
 
     @Override
