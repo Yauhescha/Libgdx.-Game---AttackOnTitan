@@ -3,7 +3,6 @@ package com.hescha.game.model;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -19,7 +18,7 @@ public abstract class AbstractMovingModel {
 
     public void draw(SpriteBatch batch) {
         if (directionRight) {
-            batch.draw(texture, x, y, width, height);
+            draw(batch, FlipMode.NONE);
         } else {
             draw(batch, FlipMode.X);
         }
@@ -29,4 +28,7 @@ public abstract class AbstractMovingModel {
         batch.draw(texture, x, y, width, height, flip.u, flip.v, flip.u2, flip.v2);
     }
 
+    public void draw(Texture texture, SpriteBatch batch, FlipMode flip) {
+        batch.draw(texture, x, y, width, height, flip.u, flip.v, flip.u2, flip.v2);
+    }
 }

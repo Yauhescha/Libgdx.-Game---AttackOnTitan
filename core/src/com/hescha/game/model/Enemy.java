@@ -15,16 +15,17 @@ import lombok.Data;
 @Data
 public class Enemy extends AbstractMovingModel {
     private static final Random random = new Random();
-    private static final float COLLISION_RADIUS = 24f;
+    private static float collisionRadius=50f;
     private final Circle collisionCircle;
+    private boolean isAlive;
 
     public Enemy() {
-        y = Gdx.graphics.getHeight();
+        y = Gdx.graphics.getHeight()/2;
         width = 250;
         height = 250;
         speed = 5;
         texture = new Texture("enemy.png");
-        collisionCircle = new Circle(x, y, COLLISION_RADIUS);
+        collisionCircle = new Circle(x, y, collisionRadius);
     }
 
     public void moveDown() {
@@ -41,6 +42,7 @@ public class Enemy extends AbstractMovingModel {
         x = random.nextInt(possibleWayCount) * width;
         y = Gdx.graphics.getHeight();
         updateCollisionCircle();
+        isAlive=true;
     }
 
     private void updateCollisionCircle() {

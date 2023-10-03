@@ -7,9 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -22,7 +22,6 @@ import java.util.List;
 public class MainScreen extends ScreenAdapter {
     //static data
     public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
-    public static final Texture BACKGROUND_TEXTURE = new Texture(Gdx.files.internal("street.png"));
 
     //required fields
     private SpriteBatch batch;
@@ -35,6 +34,7 @@ public class MainScreen extends ScreenAdapter {
     private Enemy enemy;
     private List<Background> backgrounds;
 
+    private float GLOBAL_TIME=0;
     @Override
     public void show() {
         //init required technical fields
@@ -60,8 +60,13 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        GLOBAL_TIME+=delta;
+
         update();
 
+        if(GLOBAL_TIME<1/30){return;} else {
+            GLOBAL_TIME-=1/30;
+        }
         draw();
         drawDebug();
     }
@@ -87,6 +92,12 @@ public class MainScreen extends ScreenAdapter {
         } else {
             enemy.setRandomRunWay();
         }
+
+        boolean intersects = Intersector.overlaps(enemy.getCollisionCircle(), player.getAttackCollider());
+        if (intersects && !player.isAnimationPlaying() && enemy.isAlive()) {
+            player.playAttackAnimation();
+            enemy.setAlive(false);
+        }
     }
 
     private void draw() {
@@ -108,7 +119,8 @@ public class MainScreen extends ScreenAdapter {
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-       enemy.drawDebug(shapeRenderer);
+        enemy.drawDebug(shapeRenderer);
+        player.drawDebug(shapeRenderer);
 
         shapeRenderer.end();
     }
