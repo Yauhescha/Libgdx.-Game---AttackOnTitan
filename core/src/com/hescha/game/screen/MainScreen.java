@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.hescha.game.AOTGame;
 import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
@@ -59,6 +60,10 @@ public class MainScreen extends ScreenAdapter {
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
         player.update(0, 0);
+
+//        enemy.setX(SCREEN_WIDTH / 2 );
+//        enemy.setY(SCREEN_HEIGHT / 2);
+//        enemy.moveDown();
     }
 
     @Override
@@ -96,14 +101,29 @@ public class MainScreen extends ScreenAdapter {
             enemy.moveDown();
         }
 
-        boolean intersects = Intersector.overlaps(enemy.getCollisionCircle(), player.getAttackCollider());
-        if (intersects && !player.isAnimationPlaying() && enemy.isAlive()) {
-            player.playAttackAnimation();
-            enemy.setAlive(false);
-        }
+        checkPlayerAndEnemyInteraction();
 
         if (!enemy.isAlive() || !enemy.canMove()) {
             enemy = EnemyBuilder.randomBuildEnemy();
+        }
+    }
+
+    private void checkPlayerAndEnemyInteraction() {
+        if(!enemy.isAlive()){
+            return;
+        }
+        boolean bodyToBodyInteraction = Intersector.overlaps(enemy.getBodyCollision(), player.getBodyCollider());
+        boolean bodyToPartBodyInteraction = Intersector.overlaps(enemy.getBodyCollision(), player.getAttackCollider());
+
+        if(bodyToBodyInteraction||bodyToPartBodyInteraction){
+            // player is dead
+            AOTGame.game.setScreen(new MainScreen());
+        }
+
+        boolean deathToAttack = Intersector.overlaps(enemy.getDeathCollision(), player.getAttackCollider());
+        if (deathToAttack && !player.isAnimationPlaying()) {
+            player.playAttackAnimation();
+            enemy.setAlive(false);
         }
     }
 

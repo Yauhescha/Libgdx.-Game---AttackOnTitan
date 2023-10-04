@@ -25,17 +25,23 @@ public class PlayerBuilder {
     };
 
 
-    private static final Texture standErenTexture=new Texture("player/eren/stand.png");
+    private static final Texture standErenTexture = new Texture("player/eren/stand.png");
 
 
-    public static Player buildEren(){
+    public static Player buildEren() {
         Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
         Animation<Texture> erenFlyingEffectAnimation = new Animation<>(0.1f, erenFlyingEffectTextures);
         Animation<Texture> erenAttackAnimation = new Animation<>(0.1f, erenAttackTextures);
 
-        Rectangle attackCollider = new Rectangle(0, 0, 80, 120);
-        Player player = new Player(standErenTexture, erenFlyingEffectAnimation, erenAttackAnimation,
-                attackEffectAnimation, attackCollider);
+        int width = 80;
+        int height = 120;
+        int speed = 10;
+
+        Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
+        Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
+        Player player = new Player(standErenTexture, width, height, speed,
+                erenFlyingEffectAnimation, erenAttackAnimation, attackEffectAnimation,
+                bodyCollider, attackCollider);
 
         return player;
     }

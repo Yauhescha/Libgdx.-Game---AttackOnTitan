@@ -17,6 +17,7 @@ public class Player extends AbstractMovingModel {
     private final Animation<Texture> flyingEffectAnimation;
     private final Animation<Texture> attackAnimation;
     private final Animation<Texture> attackEffectAnimation;
+    private final Rectangle bodyCollider;
     private final Rectangle attackCollider;
 
     private Texture animationFrame;
@@ -29,21 +30,21 @@ public class Player extends AbstractMovingModel {
     private float touchY;
 
     public Player(Texture texture,
+                  int width, int height, int speed,
                   Animation<Texture> flyingEffectAnimation,
                   Animation<Texture> attackAnimation,
                   Animation<Texture> attackEffectAnimation,
+                  Rectangle bodyCollider,
                   Rectangle attackCollider) {
         this.texture = texture;
+        this.width = width;
+        this.height = height;
+        this.speed = speed;
         this.flyingEffectAnimation = flyingEffectAnimation;
         this.attackAnimation = attackAnimation;
         this.attackEffectAnimation = attackEffectAnimation;
+        this.bodyCollider = bodyCollider;
         this.attackCollider = attackCollider;
-
-        width = 80;
-        height = 120;
-        speed = 10;
-
-        flyingEffectAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
 
     public void update(float touchX, float touchY) {
@@ -63,7 +64,10 @@ public class Player extends AbstractMovingModel {
 
     private void updateCollisionRectangle() {
         attackCollider.setX(x);
-        attackCollider.setY(y);
+        attackCollider.setY(y+height/3);
+
+        bodyCollider.setX(x+width/3);
+        bodyCollider.setY(y);
     }
 
     private void moveRight() {
@@ -110,16 +114,6 @@ public class Player extends AbstractMovingModel {
         }
     }
 
-    private float calculateY(float x, float y) {
-        // Находим уравнение прямой, проходящей через начальные координаты и заданную точку
-        // y = (touchY - startY) / (touchX - startX) * (x - startX) + startY
-        // Подставляем startX и touchX в формулу, чтобы найти startY и touchY
-        float startX = this.x;
-        float startY = this.y;
-
-        return (y - startY) / (x - startX) * (Gdx.graphics.getWidth() - startX) + startY;
-    }
-
     public void playAttackAnimation() {
         attackStateTime = 0;
         isAnimationPlaying = true;
@@ -127,7 +121,9 @@ public class Player extends AbstractMovingModel {
 
 
     public void drawDebug(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.setColor(Color.RED);
         shapeRenderer.rect(attackCollider.x, attackCollider.y, attackCollider.width, attackCollider.height);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.rect(bodyCollider.x, bodyCollider.y, bodyCollider.width, bodyCollider.height);
     }
 }

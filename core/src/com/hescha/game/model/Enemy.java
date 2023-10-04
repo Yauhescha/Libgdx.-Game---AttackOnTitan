@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.hescha.game.util.Settings;
 
+import java.util.List;
 import java.util.Random;
 
 import lombok.Data;
@@ -18,9 +20,9 @@ import lombok.Data;
 @Data
 public class Enemy extends AbstractMovingModel {
     private static final Random random = new Random();
-    private static float collisionRadius = 50f;
-    private final Circle collisionCircle;
-    private boolean isAlive=true;
+    private final Rectangle bodyCollision;
+    private final Rectangle deathCollision;
+    private boolean isAlive = true;
 
 
     float idleStateTime;
@@ -28,30 +30,36 @@ public class Enemy extends AbstractMovingModel {
     private final Animation<Texture> idleAnimation;
     private final Texture hair;
 
-    public Enemy(Animation<Texture> idleAnimation, Texture hair) {
+    public Enemy(int width, int height, int speed,
+                 Animation<Texture> idleAnimation, Texture hair,
+                 Rectangle bodyCollision, Rectangle deathCollision) {
+        this.width = width;
+        this.height = height;
+        this.speed = speed;
         this.idleAnimation = idleAnimation;
         this.hair = hair;
-        width = 150;
-        height = 255;
-        speed = 6;
+        this.bodyCollision = bodyCollision;
+        this.deathCollision = deathCollision;
+
         int possibleWayCount = SCREEN_WIDTH / width;
         y = Settings.SCREEN_HEIGHT;
         x = random.nextInt(possibleWayCount) * width;
-        collisionCircle = new Circle(x, y, collisionRadius);
     }
 
     public void moveDown() {
         y -= speed;
-        updateCollisionCircle();
+        updateCollisions();
     }
 
     public boolean canMove() {
         return y + height * 2 >= 0;
     }
 
-    private void updateCollisionCircle() {
-        collisionCircle.setX(x + width / 2);
-        collisionCircle.setY(y + height / 2 + 5);
+    private void updateCollisions() {
+        bodyCollision.setX(x+width/3);
+        bodyCollision.setY(y+height/6);
+        deathCollision.setX(x+width/3.5f);
+        deathCollision.setY(y+height*0.5f);
     }
 
     @Override
@@ -65,11 +73,12 @@ public class Enemy extends AbstractMovingModel {
             texture = idleAnimation.getKeyFrame(0);
             super.draw(batch);
         }
-        batch.draw(hair, x + width / 4, y + height-width / 1.6f, width / 2, width/2);
+        batch.draw(hair, x + width / 4, y + height - width / 1.6f, width / 2, width / 2);
     }
 
     public void drawDebug(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.circle(collisionCircle.x, collisionCircle.y, collisionCircle.radius);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.rect(deathCollision.x, deathCollision.y, deathCollision.width, deathCollision.height);
+        shapeRenderer.rect(bodyCollision.x, bodyCollision.y, bodyCollision.width, bodyCollision.height);
     }
 }
