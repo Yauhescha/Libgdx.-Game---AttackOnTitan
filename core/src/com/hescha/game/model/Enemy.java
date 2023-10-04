@@ -26,9 +26,11 @@ public class Enemy extends AbstractMovingModel {
     float idleStateTime;
     boolean isAnimationPlaying = false;
     private final Animation<Texture> idleAnimation;
+    private final Texture hair;
 
-    public Enemy(Animation<Texture> idleAnimation) {
+    public Enemy(Animation<Texture> idleAnimation, Texture hair) {
         this.idleAnimation = idleAnimation;
+        this.hair = hair;
         width = 150;
         height = 255;
         speed = 6;
@@ -63,6 +65,7 @@ public class Enemy extends AbstractMovingModel {
             texture = idleAnimation.getKeyFrame(0);
             super.draw(batch);
         }
+        batch.draw(hair, x + width / 4, y + height-width / 1.6f, width / 2, width/2);
     }
 
     public void drawDebug(ShapeRenderer shapeRenderer) {

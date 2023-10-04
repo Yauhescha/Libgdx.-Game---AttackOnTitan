@@ -22,10 +22,32 @@ public class EnemyBuilder {
     };
     public static final float FRAME_DURATION = 0.3f;
 
+
+    public static final Texture[] hairs = {
+            new Texture("enemy/hair/1.png"),
+            new Texture("enemy/hair/2.png"),
+            new Texture("enemy/hair/3.png"),
+            new Texture("enemy/hair/4.png"),
+            new Texture("enemy/hair/5.png"),
+            new Texture("enemy/hair/6.png"),
+            new Texture("enemy/hair/7.png"),
+            new Texture("enemy/hair/8.png"),
+            new Texture("enemy/hair/9.png"),
+            new Texture("enemy/hair/10.png"),
+            new Texture("enemy/hair/11.png"),
+            new Texture("enemy/hair/12.png"),
+            new Texture("enemy/hair/13.png"),
+            new Texture("enemy/hair/14.png"),
+            new Texture("enemy/hair/15.png"),
+            new Texture("enemy/hair/16.png"),
+            new Texture("enemy/hair/17.png"),
+            new Texture("enemy/hair/18.png")
+    };
+
     public static Enemy buildEnemyFat1() {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat1Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-        Enemy enemy = new Enemy(idleAnimation);
+        Enemy enemy = new Enemy(idleAnimation, randomHair());
 
         return enemy;
     }
@@ -33,7 +55,7 @@ public class EnemyBuilder {
     public static Enemy buildEnemyFat2() {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat2Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-        Enemy enemy = new Enemy(idleAnimation);
+        Enemy enemy = new Enemy(idleAnimation, randomHair());
 
         return enemy;
     }
@@ -41,7 +63,7 @@ public class EnemyBuilder {
     public static Enemy buildEnemyFat3() {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat3Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-        Enemy enemy = new Enemy(idleAnimation);
+        Enemy enemy = new Enemy(idleAnimation, randomHair());
 
         return enemy;
     }
@@ -61,4 +83,9 @@ public class EnemyBuilder {
                 return buildEnemyFat1();
         }
     }
+
+    private static Texture randomHair() {
+        return hairs[random.nextInt(hairs.length)];
+    }
+
 }

@@ -37,7 +37,7 @@ public class MainScreen extends ScreenAdapter {
     private Enemy enemy;
     private List<Background> backgrounds;
 
-    private float GLOBAL_TIME=0;
+    private float GLOBAL_TIME = 0;
 
     @Override
     public void show() {
@@ -58,16 +58,19 @@ public class MainScreen extends ScreenAdapter {
         // fill necessary data
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
+        player.update(0, 0);
     }
 
     @Override
     public void render(float delta) {
-        GLOBAL_TIME+=delta;
+        GLOBAL_TIME += delta;
 
         update();
 
-        if(GLOBAL_TIME< FPS_30){return;} else {
-            GLOBAL_TIME-= FPS_30;
+        if (GLOBAL_TIME < FPS_30) {
+            return;
+        } else {
+            GLOBAL_TIME -= FPS_30;
         }
         draw();
         drawDebug();
@@ -99,7 +102,7 @@ public class MainScreen extends ScreenAdapter {
             enemy.setAlive(false);
         }
 
-        if(!enemy.isAlive() || !enemy.canMove()){
+        if (!enemy.isAlive() || !enemy.canMove()) {
             enemy = EnemyBuilder.randomBuildEnemy();
         }
     }

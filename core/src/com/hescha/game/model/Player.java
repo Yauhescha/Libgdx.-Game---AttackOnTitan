@@ -43,8 +43,6 @@ public class Player extends AbstractMovingModel {
         height = 120;
         speed = 10;
 
-
-        texture = new Texture("player/eren/stand.png");
         flyingEffectAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
 
