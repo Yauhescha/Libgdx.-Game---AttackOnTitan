@@ -10,4 +10,8 @@ public enum FlipMode {
     Y(0, 0, 1, 1),
     X_AND_Y(1, 0, 0, 1);
     final int u, v, u2, v2;
+
+    public static FlipMode getFlipModeByRightDirection(boolean isRight){
+        return isRight?NONE:X;
+    }
 }

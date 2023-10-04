@@ -14,20 +14,30 @@ import lombok.Data;
 
 @Data
 public class Player extends AbstractMovingModel {
+    private Animation<Texture> flyingEffectAnimation;
+    private final Texture[] flyingEffectTextures = {
+            new Texture("effect/flying/flying (1).png"),
+            new Texture("effect/flying/flying (2).png"),
+            new Texture("effect/flying/flying (3).png"),
+            new Texture("effect/flying/flying (4).png")
+    };
     private Animation<Texture> attackAnimation;
-    private Texture animationFrame;
-    private final Rectangle attackCollider;
     private final Texture[] attackTextures = {
             new Texture("player/eren/attack/attack (0).png"),
             new Texture("player/eren/attack/attack (1).png"),
             new Texture("player/eren/attack/attack (2).png")
     };
-    //    private final Texture[] attackTextures = {
-//            new Texture("player/eren/attackEffect/attackEffect (1).png"),
-//            new Texture("player/eren/attackEffect/attackEffect (2).png"),
-//            new Texture("player/eren/attackEffect/attackEffect (3).png")
-//    };
-    float stateTime;
+    private Animation<Texture> attackEffectAnimation;
+    private final Texture[] attackEffectTextures = {
+            new Texture("player/eren/attackEffect/attackEffect (1).png"),
+            new Texture("player/eren/attackEffect/attackEffect (2).png"),
+            new Texture("player/eren/attackEffect/attackEffect (3).png")
+    };
+
+    private Texture animationFrame;
+    private final Rectangle attackCollider;
+    float attackStateTime;
+    float flyingStateTime;
     boolean isAnimationPlaying = false;
 
     public Player() {
@@ -40,6 +50,9 @@ public class Player extends AbstractMovingModel {
         texture = new Texture("player/eren/stand.png");
 
         attackAnimation = new Animation<>(0.1f, attackTextures);
+        attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
+        flyingEffectAnimation = new Animation<>(0.1f, flyingEffectTextures);
+        flyingEffectAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
 
     public void update(float touchX, float touchY) {
@@ -70,18 +83,23 @@ public class Player extends AbstractMovingModel {
 
     @Override
     public void draw(SpriteBatch batch) {
-        stateTime += Gdx.graphics.getDeltaTime();
-        if (isAnimationPlaying && !attackAnimation.isAnimationFinished(stateTime)) {
-            animationFrame = attackAnimation.getKeyFrame(stateTime);
-            super.draw(animationFrame, batch, FlipMode.NONE);
+        attackStateTime += Gdx.graphics.getDeltaTime();
+        flyingStateTime += Gdx.graphics.getDeltaTime();
+        if (isAnimationPlaying && !attackAnimation.isAnimationFinished(attackStateTime)) {
+            animationFrame = attackAnimation.getKeyFrame(attackStateTime);
+            super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
+            animationFrame = attackEffectAnimation.getKeyFrame(attackStateTime);
+            super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
         } else {
             isAnimationPlaying = false;
+            animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime);
+            batch.draw(animationFrame, x + width / 4, y - height / 2, width / 2, height);
             super.draw(batch);
         }
     }
 
     public void playAttackAnimation() {
-        stateTime = 0;
+        attackStateTime = 0;
         isAnimationPlaying = true;
     }
 

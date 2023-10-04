@@ -22,6 +22,7 @@ import java.util.List;
 public class MainScreen extends ScreenAdapter {
     //static data
     public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
+    public static final int FPS_30 = 1 / 30;
 
     //required fields
     private SpriteBatch batch;
@@ -64,8 +65,8 @@ public class MainScreen extends ScreenAdapter {
 
         update();
 
-        if(GLOBAL_TIME<1/30){return;} else {
-            GLOBAL_TIME-=1/30;
+        if(GLOBAL_TIME< FPS_30){return;} else {
+            GLOBAL_TIME-= FPS_30;
         }
         draw();
         drawDebug();
@@ -109,8 +110,8 @@ public class MainScreen extends ScreenAdapter {
         for (Background background : backgrounds) {
             background.draw(batch);
         }
-        player.draw(batch);
         enemy.draw(batch);
+        player.draw(batch);
         batch.end();
     }
 
