@@ -59,8 +59,14 @@ public class EnemyBuilder {
             new Texture("enemy/woman4/1.png"),
             new Texture("enemy/woman4/2.png")
     };
-    public static final float FRAME_DURATION = 0.3f;
+    private static final float FRAME_DURATION = 0.3f;
 
+
+    private static final int width = 150;
+    private static final int height = 255;
+    private static final int speed = 6;
+    private static final Rectangle deathCollider = new Rectangle(0, 0, width/2.5f, height / 6);
+    private static final Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height*0.7f);
 
     public static final Texture[] hairs = {
             new Texture("enemy/hair/1.png"),
@@ -84,22 +90,13 @@ public class EnemyBuilder {
     };
 
     public static Enemy buildEnemyFat1() {
-        int width = 150;
-        int height = 255;
-        int speed = 6;
 
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat1Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-
-        Rectangle deathCollider = new Rectangle(0, 0, width/2.5f, height / 6);
-        Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height*0.7f);
-
-        Enemy enemy = new Enemy(width, height, speed,
+        return new Enemy(width, height, speed,
                 idleAnimation, randomHair(),
                 bodyCollider, deathCollider);
-
-        return enemy;
     }
 
 //    public static Enemy buildEnemyFat2() {
@@ -118,69 +115,77 @@ public class EnemyBuilder {
 //        return enemy;
 //    }
 //
-//    public static Enemy buildEnemyMan1() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan1Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyMan2() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan2Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyMan3() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan3Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyMan4() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan4Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyWoman1() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman1Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyWoman2() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman2Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyWoman3() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman3Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyWoman4() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman4Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
+    public static Enemy buildEnemyMan1() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan1Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyMan2() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan2Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyMan3() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan3Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyMan4() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan4Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyWoman1() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman1Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyWoman2() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman2Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyWoman3() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman3Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyWoman4() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman4Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
 
 
     public static Enemy randomBuildEnemy() {
@@ -193,22 +198,22 @@ public class EnemyBuilder {
 //                return buildEnemyFat2();
 //            case 2:
 //                return buildEnemyFat3();
-//            case 3:
-//                return buildEnemyMan1();
-//            case 4:
-//                return buildEnemyMan2();
-//            case 5:
-//                return buildEnemyMan3();
-//            case 6:
-//                return buildEnemyMan4();
-//            case 7:
-//                return buildEnemyWoman1();
-//            case 8:
-//                return buildEnemyWoman2();
-//            case 9:
-//                return buildEnemyWoman3();
-//            case 10:
-//                return buildEnemyWoman4();
+            case 3:
+                return buildEnemyMan1();
+            case 4:
+                return buildEnemyMan2();
+            case 5:
+                return buildEnemyMan3();
+            case 6:
+                return buildEnemyMan4();
+            case 7:
+                return buildEnemyWoman1();
+            case 8:
+                return buildEnemyWoman2();
+            case 9:
+                return buildEnemyWoman3();
+            case 10:
+                return buildEnemyWoman4();
             default:
                 return buildEnemyFat1();
         }

@@ -9,11 +9,20 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.hescha.game.util.LimitedQueue;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+import jdk.internal.net.http.common.Pair;
 import lombok.Data;
 
 @Data
 public class Player extends AbstractMovingModel {
+    private final LimitedQueue<Point> fifo = new LimitedQueue<>(40);
     private final Animation<Texture> flyingEffectAnimation;
     private final Animation<Texture> attackAnimation;
     private final Animation<Texture> attackEffectAnimation;
@@ -47,7 +56,14 @@ public class Player extends AbstractMovingModel {
         this.attackCollider = attackCollider;
     }
 
-    public void update(float touchX, float touchY) {
+    public void update(float delta) {
+        attackStateTime += delta;
+        flyingStateTime += delta;
+        updateCollisionRectangle();
+        fifo.forEach(point -> point.y-=speed);
+    }
+
+    public void move(float touchX, float touchY) {
         this.touchX = touchX;
         this.touchY = Gdx.graphics.getHeight() - touchY;
         if (touchX > Gdx.graphics.getWidth() / 2) {
@@ -64,9 +80,9 @@ public class Player extends AbstractMovingModel {
 
     private void updateCollisionRectangle() {
         attackCollider.setX(x);
-        attackCollider.setY(y+height/3);
+        attackCollider.setY(y + height / 3);
 
-        bodyCollider.setX(x+width/3);
+        bodyCollider.setX(x + width / 3);
         bodyCollider.setY(y);
     }
 
@@ -82,12 +98,11 @@ public class Player extends AbstractMovingModel {
 
     @Override
     public void draw(SpriteBatch batch) {
-        attackStateTime += Gdx.graphics.getDeltaTime();
-        flyingStateTime += Gdx.graphics.getDeltaTime();
-
-
-        animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime);
-        batch.draw(animationFrame, x + width / 4, y - height / 2, width / 2, height);
+        animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime, true);
+        fifo.add(new Point(x + width / 4, y + height / 2, animationFrame));
+        fifo.forEach(point -> batch.draw(point.texture,
+                point.getX(), point.getY(),
+                width / 2, width / 2));
 
 
         if (isAnimationPlaying && !attackAnimation.isAnimationFinished(attackStateTime)) {

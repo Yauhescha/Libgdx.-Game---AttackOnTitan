@@ -59,7 +59,7 @@ public class MainScreen extends ScreenAdapter {
         // fill necessary data
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
-        player.update(0, 0);
+        player.move(0, 0);
 
 //        enemy.setX(SCREEN_WIDTH / 2 );
 //        enemy.setY(SCREEN_HEIGHT / 2);
@@ -70,7 +70,7 @@ public class MainScreen extends ScreenAdapter {
     public void render(float delta) {
         GLOBAL_TIME += delta;
 
-        update();
+        update(delta);
 
         if (GLOBAL_TIME < FPS_30) {
             return;
@@ -81,7 +81,7 @@ public class MainScreen extends ScreenAdapter {
         drawDebug();
     }
 
-    private void update() {
+    private void update(float delta) {
         //update background
         for (Background background : backgrounds) {
             background.update();
@@ -92,7 +92,7 @@ public class MainScreen extends ScreenAdapter {
         if (touched) {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.input.getY();
-            player.update(touchX, touchY);
+            player.move(touchX, touchY);
         }
 
 
@@ -100,6 +100,8 @@ public class MainScreen extends ScreenAdapter {
         if (enemy.canMove()) {
             enemy.moveDown();
         }
+
+        player.update(delta);
 
         checkPlayerAndEnemyInteraction();
 
