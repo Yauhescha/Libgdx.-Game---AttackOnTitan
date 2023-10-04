@@ -17,6 +17,7 @@ import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
 import com.hescha.game.util.EnemyBuilder;
+import com.hescha.game.util.PlayerBuilder;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class MainScreen extends ScreenAdapter {
     private List<Background> backgrounds;
 
     private float GLOBAL_TIME=0;
+
     @Override
     public void show() {
         //init required technical fields
@@ -49,13 +51,13 @@ public class MainScreen extends ScreenAdapter {
         viewport.apply(true);
 
         // init game related fields
-        player = new Player();
+        player = PlayerBuilder.buildEren();
         enemy = EnemyBuilder.randomBuildEnemy();
         backgrounds = Background.getBackgrounds();
 
         // fill necessary data
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
-        player.setY(SCREEN_HEIGHT / 3);
+        player.setY(SCREEN_HEIGHT / 4);
     }
 
     @Override
@@ -123,6 +125,7 @@ public class MainScreen extends ScreenAdapter {
 
         enemy.drawDebug(shapeRenderer);
         player.drawDebug(shapeRenderer);
+        player.drawIdleLine(shapeRenderer);
 
         shapeRenderer.end();
     }
