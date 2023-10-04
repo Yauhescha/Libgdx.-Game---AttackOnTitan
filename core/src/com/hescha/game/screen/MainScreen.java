@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
+import com.hescha.game.util.EnemyBuilder;
 
 import java.util.List;
 
@@ -49,14 +50,12 @@ public class MainScreen extends ScreenAdapter {
 
         // init game related fields
         player = new Player();
-        enemy = new Enemy();
+        enemy = EnemyBuilder.randomBuildEnemy();
         backgrounds = Background.getBackgrounds();
 
         // fill necessary data
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 3);
-
-        enemy.setRandomRunWay();
     }
 
     @Override
@@ -90,14 +89,16 @@ public class MainScreen extends ScreenAdapter {
         //update enemy
         if (enemy.canMove()) {
             enemy.moveDown();
-        } else {
-            enemy.setRandomRunWay();
         }
 
         boolean intersects = Intersector.overlaps(enemy.getCollisionCircle(), player.getAttackCollider());
         if (intersects && !player.isAnimationPlaying() && enemy.isAlive()) {
             player.playAttackAnimation();
             enemy.setAlive(false);
+        }
+
+        if(!enemy.isAlive() || !enemy.canMove()){
+            enemy = EnemyBuilder.randomBuildEnemy();
         }
     }
 

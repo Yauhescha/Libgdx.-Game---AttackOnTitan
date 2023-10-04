@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.hescha.game.util.Settings;
 
 import java.util.Random;
 
@@ -19,26 +20,22 @@ public class Enemy extends AbstractMovingModel {
     private static final Random random = new Random();
     private static float collisionRadius = 50f;
     private final Circle collisionCircle;
-    private boolean isAlive;
+    private boolean isAlive=true;
 
 
     float idleStateTime;
     boolean isAnimationPlaying = false;
-    private Animation<Texture> idleAnimation;
-    private final Texture[] idleTextures = {
-            new Texture("enemy/fat1/fat1 (1).png"),
-            new Texture("enemy/fat1/fat1 (3).png")
-    };
+    private final Animation<Texture> idleAnimation;
 
-    public Enemy() {
-        y = Gdx.graphics.getHeight() / 2;
+    public Enemy(Animation<Texture> idleAnimation) {
+        this.idleAnimation = idleAnimation;
         width = 150;
         height = 255;
         speed = 6;
-        texture = new Texture("enemy/enemy.png");
+        int possibleWayCount = SCREEN_WIDTH / width;
+        y = Settings.SCREEN_HEIGHT;
+        x = random.nextInt(possibleWayCount) * width;
         collisionCircle = new Circle(x, y, collisionRadius);
-        idleAnimation = new Animation<>(0.3f, idleTextures);
-        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
 
     public void moveDown() {
@@ -48,14 +45,6 @@ public class Enemy extends AbstractMovingModel {
 
     public boolean canMove() {
         return y + height * 2 >= 0;
-    }
-
-    public void setRandomRunWay() {
-        int possibleWayCount = SCREEN_WIDTH / width;
-        x = random.nextInt(possibleWayCount) * width;
-        y = Gdx.graphics.getHeight();
-        updateCollisionCircle();
-        isAlive = true;
     }
 
     private void updateCollisionCircle() {
@@ -71,7 +60,7 @@ public class Enemy extends AbstractMovingModel {
             texture = idleAnimation.getKeyFrame(idleStateTime);
             super.draw(batch);
         } else {
-            texture = idleTextures[1];
+            texture = idleAnimation.getKeyFrame(0);
             super.draw(batch);
         }
     }
