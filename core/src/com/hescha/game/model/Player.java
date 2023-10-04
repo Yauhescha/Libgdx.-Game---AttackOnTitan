@@ -85,6 +85,13 @@ public class Player extends AbstractMovingModel {
     public void draw(SpriteBatch batch) {
         attackStateTime += Gdx.graphics.getDeltaTime();
         flyingStateTime += Gdx.graphics.getDeltaTime();
+
+
+        animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime);
+        batch.draw(animationFrame, x + width / 4, y - height / 2, width / 2, height);
+        super.draw(batch);
+
+
         if (isAnimationPlaying && !attackAnimation.isAnimationFinished(attackStateTime)) {
             animationFrame = attackAnimation.getKeyFrame(attackStateTime);
             super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
@@ -92,9 +99,6 @@ public class Player extends AbstractMovingModel {
             super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
         } else {
             isAnimationPlaying = false;
-            animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime);
-            batch.draw(animationFrame, x + width / 4, y - height / 2, width / 2, height);
-            super.draw(batch);
         }
     }
 
