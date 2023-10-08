@@ -5,6 +5,8 @@ import static com.hescha.game.util.Settings.SCREEN_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -25,6 +27,10 @@ import com.hescha.game.util.PlayerBuilder;
 
 import java.util.List;
 
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+
 public class GameScreen extends ScreenAdapter {
     //static data
     public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
@@ -37,6 +43,7 @@ public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private BitmapFont font;
     private GlyphLayout glyphLayout;
+    private static Music music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mid"));
 
     // game related fields
     private Player player;
@@ -68,6 +75,11 @@ public class GameScreen extends ScreenAdapter {
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
         player.move(0, 0);
+
+       if(!music.isPlaying()){
+           music.play();
+           music.setLooping(true);
+       }
     }
 
     @Override
@@ -113,17 +125,17 @@ public class GameScreen extends ScreenAdapter {
             enemy = EnemyBuilder.randomBuildEnemy();
         }
 
-        glyphLayout.setText(font, murderCount+"");
+        glyphLayout.setText(font, murderCount + "");
     }
 
     private void checkPlayerAndEnemyInteraction() {
-        if(!enemy.isAlive()){
+        if (!enemy.isAlive()) {
             return;
         }
         boolean bodyToBodyInteraction = Intersector.overlaps(enemy.getBodyCollision(), player.getBodyCollider());
         boolean bodyToPartBodyInteraction = Intersector.overlaps(enemy.getBodyCollision(), player.getAttackCollider());
 
-        if(bodyToBodyInteraction||bodyToPartBodyInteraction){
+        if (bodyToBodyInteraction || bodyToPartBodyInteraction) {
             // player is dead
             AOTGame.game.setScreen(new GameScreen());
         }
@@ -147,7 +159,7 @@ public class GameScreen extends ScreenAdapter {
         }
         enemy.draw(batch);
         player.draw(batch);
-        font.draw(batch, glyphLayout, SCREEN_WIDTH/2-glyphLayout.width/2, SCREEN_HEIGHT-50);
+        font.draw(batch, glyphLayout, SCREEN_WIDTH / 2 - glyphLayout.width / 2, SCREEN_HEIGHT - 50);
         batch.end();
     }
 

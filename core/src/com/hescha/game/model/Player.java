@@ -102,7 +102,7 @@ public class Player extends AbstractMovingModel {
         fifo.add(new Point(x + width / 4, y + height / 2, animationFrame));
         fifo.forEach(point -> batch.draw(point.texture,
                 point.getX(), point.getY(),
-                width / 2, width / 2));
+                width / 3, width / 3));
 
 
         if (isAnimationPlaying && !attackAnimation.isAnimationFinished(attackStateTime)) {
