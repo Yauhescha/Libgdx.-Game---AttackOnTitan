@@ -3,21 +3,15 @@ package com.hescha.game.model;
 import static com.hescha.game.util.Settings.SCREEN_WIDTH;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.hescha.game.util.LimitedQueue;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
-import jdk.internal.net.http.common.Pair;
 import lombok.Data;
 
 @Data
@@ -28,12 +22,15 @@ public class Player extends AbstractMovingModel {
     private final Animation<Texture> attackEffectAnimation;
     private final Rectangle bodyCollider;
     private final Rectangle attackCollider;
+    private final Music erenAttackSound;
+    private final Music[] erenDeathSounds;
 
     private Texture animationFrame;
     private float attackStateTime;
     private float flyingStateTime;
     private boolean isAnimationPlaying = false;
     private boolean isAnimationLinePlaying = false;
+    private boolean isSoundAttackPlaying = false;
 
     private float touchX;
     private float touchY;
@@ -44,7 +41,8 @@ public class Player extends AbstractMovingModel {
                   Animation<Texture> attackAnimation,
                   Animation<Texture> attackEffectAnimation,
                   Rectangle bodyCollider,
-                  Rectangle attackCollider) {
+                  Rectangle attackCollider,
+                  Music erenAttackSound, Music[] erenDeathSounds) {
         this.texture = texture;
         this.width = width;
         this.height = height;
@@ -54,13 +52,19 @@ public class Player extends AbstractMovingModel {
         this.attackEffectAnimation = attackEffectAnimation;
         this.bodyCollider = bodyCollider;
         this.attackCollider = attackCollider;
+        this.erenAttackSound = erenAttackSound;
+        this.erenDeathSounds = erenDeathSounds;
     }
 
     public void update(float delta) {
         attackStateTime += delta;
         flyingStateTime += delta;
         updateCollisionRectangle();
-        fifo.forEach(point -> point.y-=speed);
+        fifo.forEach(point -> point.y -= speed);
+        if(isSoundAttackPlaying){
+            isSoundAttackPlaying=false;
+            erenAttackSound.play();
+        }
     }
 
     public void move(float touchX, float touchY) {
@@ -114,6 +118,8 @@ public class Player extends AbstractMovingModel {
             isAnimationPlaying = false;
             super.draw(batch);
         }
+
+
     }
 
     public void drawIdleLine(ShapeRenderer shapeRenderer) {
@@ -132,6 +138,7 @@ public class Player extends AbstractMovingModel {
     public void playAttackAnimation() {
         attackStateTime = 0;
         isAnimationPlaying = true;
+        isSoundAttackPlaying = true;
     }
 
 

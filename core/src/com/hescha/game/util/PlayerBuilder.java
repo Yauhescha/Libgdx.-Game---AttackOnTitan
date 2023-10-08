@@ -1,9 +1,13 @@
 package com.hescha.game.util;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Rectangle;
 import com.hescha.game.model.Player;
+
+import java.util.List;
 
 public class PlayerBuilder {
     private static final Texture[] attackEffectTextures = {
@@ -27,6 +31,12 @@ public class PlayerBuilder {
 
     private static final Texture standErenTexture = new Texture("player/eren/stand.png");
 
+    private static final Music erenAttackSound = Gdx.audio.newMusic(Gdx.files.internal("player/eren/sound/erenAttack.wav"));
+    private static final Music[] erenDeathSounds = new Music[]{
+            Gdx.audio.newMusic(Gdx.files.internal("player/eren/sound/dead1.wav")),
+            Gdx.audio.newMusic(Gdx.files.internal("player/eren/sound/dead2.wav")),
+            Gdx.audio.newMusic(Gdx.files.internal("player/eren/sound/dead3.wav"))
+    };
 
     public static Player buildEren() {
         Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
@@ -41,7 +51,8 @@ public class PlayerBuilder {
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
         Player player = new Player(standErenTexture, width, height, speed,
                 erenFlyingEffectAnimation, erenAttackAnimation, attackEffectAnimation,
-                bodyCollider, attackCollider);
+                bodyCollider, attackCollider,
+                erenAttackSound, erenDeathSounds);
 
         return player;
     }
