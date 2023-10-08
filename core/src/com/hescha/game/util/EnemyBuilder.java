@@ -99,22 +99,24 @@ public class EnemyBuilder {
                 bodyCollider, deathCollider);
     }
 
-//    public static Enemy buildEnemyFat2() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat2Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
-//    public static Enemy buildEnemyFat3() {
-//        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat3Textures);
-//        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//        Enemy enemy = new Enemy(idleAnimation, randomHair());
-//
-//        return enemy;
-//    }
-//
+    public static Enemy buildEnemyFat2() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat2Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
+    public static Enemy buildEnemyFat3() {
+        Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat3Textures);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        return new Enemy(width, height, speed,
+                idleAnimation, randomHair(),
+                bodyCollider, deathCollider);
+    }
+
     public static Enemy buildEnemyMan1() {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan1Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
@@ -194,10 +196,10 @@ public class EnemyBuilder {
         switch (randomNumber) {
             case 0:
                 return buildEnemyFat1();
-//            case 1:
-//                return buildEnemyFat2();
-//            case 2:
-//                return buildEnemyFat3();
+            case 1:
+                return buildEnemyFat2();
+            case 2:
+                return buildEnemyFat3();
             case 3:
                 return buildEnemyMan1();
             case 4:
