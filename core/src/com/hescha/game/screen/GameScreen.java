@@ -7,6 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
@@ -18,11 +20,12 @@ import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
 import com.hescha.game.util.EnemyBuilder;
+import com.hescha.game.util.FontUtil;
 import com.hescha.game.util.PlayerBuilder;
 
 import java.util.List;
 
-public class MainScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter {
     //static data
     public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
     public static final int FPS_30 = 1 / 30;
@@ -32,6 +35,8 @@ public class MainScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
     private Viewport viewport;
     private OrthographicCamera camera;
+    private BitmapFont font;
+    private GlyphLayout glyphLayout;
 
     // game related fields
     private Player player;
@@ -39,6 +44,7 @@ public class MainScreen extends ScreenAdapter {
     private List<Background> backgrounds;
 
     private float GLOBAL_TIME = 0;
+    private int murderCount = 0;
 
     @Override
     public void show() {
@@ -50,6 +56,8 @@ public class MainScreen extends ScreenAdapter {
         camera.update();
         viewport = new FillViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         viewport.apply(true);
+        font = FontUtil.generateFont(Color.BLACK);
+        glyphLayout = new GlyphLayout();
 
         // init game related fields
         player = PlayerBuilder.buildEren();
@@ -60,10 +68,6 @@ public class MainScreen extends ScreenAdapter {
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
         player.move(0, 0);
-
-//        enemy.setX(SCREEN_WIDTH / 2 );
-//        enemy.setY(SCREEN_HEIGHT / 2);
-//        enemy.moveDown();
     }
 
     @Override
@@ -108,6 +112,8 @@ public class MainScreen extends ScreenAdapter {
         if (!enemy.isAlive() || !enemy.canMove()) {
             enemy = EnemyBuilder.randomBuildEnemy();
         }
+
+        glyphLayout.setText(font, murderCount+"");
     }
 
     private void checkPlayerAndEnemyInteraction() {
@@ -119,13 +125,14 @@ public class MainScreen extends ScreenAdapter {
 
         if(bodyToBodyInteraction||bodyToPartBodyInteraction){
             // player is dead
-            AOTGame.game.setScreen(new MainScreen());
+            AOTGame.game.setScreen(new GameScreen());
         }
 
         boolean deathToAttack = Intersector.overlaps(enemy.getDeathCollision(), player.getAttackCollider());
         if (deathToAttack && !player.isAnimationPlaying()) {
             player.playAttackAnimation();
             enemy.setAlive(false);
+            murderCount++;
         }
     }
 
@@ -140,6 +147,7 @@ public class MainScreen extends ScreenAdapter {
         }
         enemy.draw(batch);
         player.draw(batch);
+        font.draw(batch, glyphLayout, SCREEN_WIDTH/2-glyphLayout.width/2, SCREEN_HEIGHT-50);
         batch.end();
     }
 
