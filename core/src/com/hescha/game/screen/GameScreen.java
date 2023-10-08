@@ -43,7 +43,7 @@ public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private BitmapFont font;
     private GlyphLayout glyphLayout;
-    private static Music music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mid"));
+    private static final Music music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mid"));
 
     // game related fields
     private Player player;

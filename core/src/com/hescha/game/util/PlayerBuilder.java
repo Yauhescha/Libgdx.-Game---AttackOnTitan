@@ -52,6 +52,19 @@ public class PlayerBuilder {
     };
 
 
+    private static final Texture bertholdStandTexture = new Texture("player/bertholdt/stand.png");
+    private static final Texture[] bertholdAttackTextures = {
+            new Texture("player/bertholdt/attack/1.png"),
+            new Texture("player/bertholdt/attack/2.png"),
+            new Texture("player/bertholdt/attack/3.png")
+    };
+    private static final Music[] bertholdDeathSounds = new Music[]{
+            Gdx.audio.newMusic(Gdx.files.internal("player/bertholdt/sound/1.wav")),
+            Gdx.audio.newMusic(Gdx.files.internal("player/bertholdt/sound/2.wav")),
+            Gdx.audio.newMusic(Gdx.files.internal("player/bertholdt/sound/3.wav"))
+    };
+
+
 
     public static Player buildEren() {
         Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
@@ -91,15 +104,36 @@ public class PlayerBuilder {
         return player;
     }
 
+    public static Player buildBerthold() {
+        Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
+        Animation<Texture> flyingEffectAnimation = new Animation<>(0.1f, flyingEffectTextures);
+        Animation<Texture> attackAnimation = new Animation<>(0.1f, bertholdAttackTextures);
+
+        int width = 80;
+        int height = 120;
+        int speed = 5;
+
+        Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
+        Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
+        Player player = new Player(bertholdStandTexture, width, height, speed,
+                flyingEffectAnimation, attackAnimation, attackEffectAnimation,
+                bodyCollider, attackCollider,
+                attackSound, bertholdDeathSounds);
+
+        return player;
+    }
+
 
     public static Player buildRandomPlayer() {
-        int randomNumber = random.nextInt(2);
+        int randomNumber = random.nextInt(3);
 
         switch (randomNumber) {
             case 0:
                 return buildEren();
             case 1:
                 return buildArmin();
+            case 2:
+                return buildBerthold();
             default:
                 return buildEren();
         }

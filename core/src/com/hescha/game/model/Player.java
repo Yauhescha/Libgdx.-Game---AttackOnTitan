@@ -60,7 +60,7 @@ public class Player extends AbstractMovingModel {
         attackStateTime += delta;
         flyingStateTime += delta;
         updateCollisionRectangle();
-        fifo.forEach(point -> point.y -= speed);
+        fifo.forEach(point -> point.y -= 10);
         if(isSoundAttackPlaying){
             isSoundAttackPlaying=false;
             erenAttackSound.play();
