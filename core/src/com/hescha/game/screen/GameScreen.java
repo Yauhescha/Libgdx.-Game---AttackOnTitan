@@ -67,7 +67,7 @@ public class GameScreen extends ScreenAdapter {
         glyphLayout = new GlyphLayout();
 
         // init game related fields
-        player = PlayerBuilder.buildEren();
+        player = PlayerBuilder.buildRandomPlayer();
         enemy = EnemyBuilder.randomBuildEnemy();
         backgrounds = Background.getBackgrounds();
 
