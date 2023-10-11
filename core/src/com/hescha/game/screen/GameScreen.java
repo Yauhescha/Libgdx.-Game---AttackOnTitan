@@ -6,7 +6,6 @@ import static com.hescha.game.util.Settings.SCREEN_WIDTH;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -25,11 +25,11 @@ import com.hescha.game.util.EnemyBuilder;
 import com.hescha.game.util.FontUtil;
 import com.hescha.game.util.PlayerBuilder;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameScreen extends ScreenAdapter {
     //static data
@@ -47,10 +47,13 @@ public class GameScreen extends ScreenAdapter {
 
     // game related fields
     private Player player;
-    private Enemy enemy;
+    private Array<Enemy> enemies;
+    private Array<Enemy> toRemoveEnemies;
     private List<Background> backgrounds;
 
     private float GLOBAL_TIME = 0;
+    private final float spawnTimeInitial = 5f;
+    private float spawnTime = 5f;
     private int murderCount = 0;
 
     @Override
@@ -68,7 +71,9 @@ public class GameScreen extends ScreenAdapter {
 
         // init game related fields
         player = PlayerBuilder.buildRandomPlayer();
-        enemy = EnemyBuilder.randomBuildEnemy();
+        toRemoveEnemies = new Array<>();
+        enemies = new Array<>();
+        enemies.add(EnemyBuilder.randomBuildEnemy());
         backgrounds = Background.getBackgrounds();
 
         // fill necessary data
@@ -76,10 +81,10 @@ public class GameScreen extends ScreenAdapter {
         player.setY(SCREEN_HEIGHT / 4);
         player.move(0, 0);
 
-       if(!music.isPlaying()){
-           music.play();
-           music.setLooping(true);
-       }
+        if (!music.isPlaying()) {
+            music.play();
+            music.setLooping(true);
+        }
     }
 
     @Override
@@ -87,6 +92,7 @@ public class GameScreen extends ScreenAdapter {
         GLOBAL_TIME += delta;
 
         update(delta);
+        spawnEnemy();
 
         if (GLOBAL_TIME < FPS_30) {
             return;
@@ -96,6 +102,40 @@ public class GameScreen extends ScreenAdapter {
         draw();
         drawDebug();
     }
+
+    private void spawnEnemy() {
+        if (spawnTime < 0) {
+            spawnTime = spawnTimeInitial;
+            float timesPast = GLOBAL_TIME / spawnTimeInitial;
+            if (timesPast == 1) {
+                enemies.add(EnemyBuilder.randomBuildEnemy());
+            } else if (timesPast == 2) {
+                enemies.add(EnemyBuilder.randomBuildEnemy());
+                spawnEnemy(1);
+            } else if (timesPast == 3) {
+                enemies.add(EnemyBuilder.randomBuildEnemy());
+                spawnEnemy(2);
+            } else {
+                enemies.add(EnemyBuilder.randomBuildEnemy());
+                spawnEnemy(3);
+            }
+        }
+    }
+
+    private void spawnEnemy(int number) {
+        int times = (int) spawnTimeInitial;
+        Timer timer = new Timer();
+        for (int i = 0; i < number; i++) {
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    enemies.add(EnemyBuilder.randomBuildEnemy());
+                }
+            };
+            int delay = (int) (Math.random() * (times - 1) * 1000); // Задержка между вызовами метода
+            timer.schedule(task, delay);
+        }
+    }
+
 
     private void update(float delta) {
         //update background
@@ -110,25 +150,27 @@ public class GameScreen extends ScreenAdapter {
             float touchY = Gdx.input.getY();
             player.move(touchX, touchY);
         }
-
-
-        //update enemy
-        if (enemy.canMove()) {
-            enemy.moveDown();
-        }
-
         player.update(delta);
 
-        checkPlayerAndEnemyInteraction();
+        //update enemy
 
-        if (!enemy.isAlive() || !enemy.canMove()) {
-            enemy = EnemyBuilder.randomBuildEnemy();
+        for (Enemy enemy : enemies) {
+            checkPlayerAndEnemyInteraction(enemy);
+            if (enemy.canMove()) {
+                enemy.moveDown();
+            } else {
+                toRemoveEnemies.add(enemy);
+            }
+
         }
+        enemies.removeAll(toRemoveEnemies, true);
+        toRemoveEnemies.clear();
 
         glyphLayout.setText(font, murderCount + "");
+        spawnTime -= delta;
     }
 
-    private void checkPlayerAndEnemyInteraction() {
+    private void checkPlayerAndEnemyInteraction(Enemy enemy) {
         if (!enemy.isAlive()) {
             return;
         }
@@ -157,7 +199,10 @@ public class GameScreen extends ScreenAdapter {
         for (Background background : backgrounds) {
             background.draw(batch);
         }
-        enemy.draw(batch);
+
+        for (Enemy enemy : enemies) {
+            enemy.draw(batch);
+        }
         player.draw(batch);
         font.draw(batch, glyphLayout, SCREEN_WIDTH / 2 - glyphLayout.width / 2, SCREEN_HEIGHT - 50);
         batch.end();
@@ -168,7 +213,9 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        enemy.drawDebug(shapeRenderer);
+        for (Enemy enemy : enemies) {
+            enemy.drawDebug(shapeRenderer);
+        }
         player.drawDebug(shapeRenderer);
         player.drawIdleLine(shapeRenderer);
 

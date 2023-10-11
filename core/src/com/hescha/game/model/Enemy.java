@@ -41,9 +41,9 @@ public class Enemy extends AbstractMovingModel {
         this.bodyCollision = bodyCollision;
         this.deathCollision = deathCollision;
 
-        int possibleWayCount = SCREEN_WIDTH / width;
+        int possibleWayCount = 5;
         y = Settings.SCREEN_HEIGHT;
-        x = random.nextInt(possibleWayCount) * width;
+        x = (int) (random.nextInt(possibleWayCount) * width * 0.7f);
     }
 
     public void moveDown() {
@@ -56,10 +56,10 @@ public class Enemy extends AbstractMovingModel {
     }
 
     private void updateCollisions() {
-        bodyCollision.setX(x+width/3);
-        bodyCollision.setY(y+height/6);
-        deathCollision.setX(x+width/3.5f);
-        deathCollision.setY(y+height*0.5f);
+        bodyCollision.setX(x + width / 3);
+        bodyCollision.setY(y + height / 6);
+        deathCollision.setX(x + width / 3.5f);
+        deathCollision.setY(y + height * 0.5f);
     }
 
     @Override
