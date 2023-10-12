@@ -64,7 +64,7 @@ public class EnemyBuilder {
 
     private static final int width = 200;
     private static final int height = 300;
-    private static final int speed = 9;
+    private static final int speed = 8;
     private static final Rectangle deathCollider = new Rectangle(0, 0, width / 2.5f, height / 6);
     private static final Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height * 0.7f);
 
@@ -89,48 +89,72 @@ public class EnemyBuilder {
             new Texture("enemy/hair/18.png")
     };
 
-    public static Enemy buildEnemyFat1() {
+    private static final Texture[] deadTextures = {
+            new Texture("effect/dissapearing/1.png"),
+            new Texture("effect/dissapearing/2.png"),
+            new Texture("effect/dissapearing/3.png"),
+            new Texture("effect/dissapearing/4.png"),
+            new Texture("effect/dissapearing/5.png"),
+            new Texture("effect/dissapearing/6.png"),
+            new Texture("effect/dissapearing/7.png"),
+            new Texture("effect/dissapearing/8.png"),
+            new Texture("effect/dissapearing/9.png"),
+            new Texture("effect/dissapearing/10.png"),
+            new Texture("effect/dissapearing/11.png"),
+            new Texture("effect/dissapearing/12.png"),
+            new Texture("effect/dissapearing/13.png"),
+            new Texture("effect/dissapearing/14.png")
+    };
 
+    public static final Animation<Texture> deadAnimation = new Animation<>(0.08f, deadTextures);
+
+
+    public static Enemy buildEnemyFat1() {
+        int speed1 = speed - 1;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat1Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed - 1,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
 
     public static Enemy buildEnemyFat2() {
+        int speed1 = speed - 2;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat2Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, -2,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
 
     public static Enemy buildEnemyFat3() {
+        int speed1 = speed - 2;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat3Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed - 3,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
 
     public static Enemy buildEnemyMan1() {
+        int speed1 = speed + 1;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan1Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed + 2,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
 
     public static Enemy buildEnemyMan2() {
+        int speed1 = speed + 2;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan2Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed + 1,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
@@ -145,10 +169,11 @@ public class EnemyBuilder {
     }
 
     public static Enemy buildEnemyMan4() {
+        int speed1 = speed + 1;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleMan4Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed + 1,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
@@ -163,28 +188,31 @@ public class EnemyBuilder {
     }
 
     public static Enemy buildEnemyWoman2() {
+        int speed1 = speed - 2;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman2Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed - 2,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
 
     public static Enemy buildEnemyWoman3() {
+        int speed1 = speed + 2;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman3Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed + 2,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
 
     public static Enemy buildEnemyWoman4() {
+        int speed1 = speed + 1;
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleWoman4Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed + 3,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }

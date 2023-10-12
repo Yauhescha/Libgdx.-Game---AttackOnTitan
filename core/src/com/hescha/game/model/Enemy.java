@@ -1,6 +1,6 @@
 package com.hescha.game.model;
 
-import static com.hescha.game.util.Settings.SCREEN_WIDTH;
+import static com.hescha.game.util.EnemyBuilder.deadAnimation;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,10 +9,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
 import com.hescha.game.util.Settings;
 
-import java.util.List;
 import java.util.Random;
 
 import lombok.Data;
@@ -69,16 +67,21 @@ public class Enemy extends AbstractMovingModel {
         if (isAlive) {
             texture = idleAnimation.getKeyFrame(idleStateTime);
             super.draw(batch);
+            batch.draw(hair, x + width / 4, y + height - width / 1.6f, width / 2, width / 2);
         } else {
-            texture = idleAnimation.getKeyFrame(0);
+            texture = deadAnimation.getKeyFrame(idleStateTime);
             super.draw(batch);
         }
-        batch.draw(hair, x + width / 4, y + height - width / 1.6f, width / 2, width / 2);
     }
 
     public void drawDebug(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.rect(deathCollision.x, deathCollision.y, deathCollision.width, deathCollision.height);
         shapeRenderer.rect(bodyCollision.x, bodyCollision.y, bodyCollision.width, bodyCollision.height);
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+        idleStateTime = 0;
     }
 }

@@ -32,6 +32,7 @@ public class Player extends AbstractMovingModel {
     private boolean isAnimationLinePlaying = false;
     private boolean isSoundAttackPlaying = false;
 
+    private boolean isAlive = true;
     private float touchX;
     private float touchY;
 
