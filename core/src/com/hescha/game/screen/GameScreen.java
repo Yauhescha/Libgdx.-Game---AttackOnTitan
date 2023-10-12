@@ -5,7 +5,6 @@ import static com.hescha.game.util.Settings.SCREEN_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -25,8 +24,6 @@ import com.hescha.game.util.EnemyBuilder;
 import com.hescha.game.util.FontUtil;
 import com.hescha.game.util.PlayerBuilder;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,7 +40,6 @@ public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private BitmapFont font;
     private GlyphLayout glyphLayout;
-    private static final Music music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mid"));
 
     // game related fields
     private Player player;
@@ -80,11 +76,6 @@ public class GameScreen extends ScreenAdapter {
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
         player.move(0, 0);
-
-        if (!music.isPlaying()) {
-            music.play();
-            music.setLooping(true);
-        }
     }
 
     @Override
@@ -179,6 +170,7 @@ public class GameScreen extends ScreenAdapter {
 
         if (bodyToBodyInteraction || bodyToPartBodyInteraction) {
             // player is dead
+            player.setAlive(false);
             AOTGame.game.setScreen(new GameScreen());
         }
 

@@ -12,10 +12,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.hescha.game.util.LimitedQueue;
 
+import java.util.Random;
+
 import lombok.Data;
 
 @Data
 public class Player extends AbstractMovingModel {
+    private static final Random random = new Random();
     private final LimitedQueue<Point> fifo = new LimitedQueue<>(40);
     private final Animation<Texture> flyingEffectAnimation;
     private final Animation<Texture> attackAnimation;
@@ -23,7 +26,7 @@ public class Player extends AbstractMovingModel {
     private final Rectangle bodyCollider;
     private final Rectangle attackCollider;
     private final Music erenAttackSound;
-    private final Music[] erenDeathSounds;
+    private final Music[] deathSounds;
 
     private Texture animationFrame;
     private float attackStateTime;
@@ -43,7 +46,7 @@ public class Player extends AbstractMovingModel {
                   Animation<Texture> attackEffectAnimation,
                   Rectangle bodyCollider,
                   Rectangle attackCollider,
-                  Music erenAttackSound, Music[] erenDeathSounds) {
+                  Music erenAttackSound, Music[] deathSounds) {
         this.texture = texture;
         this.width = width;
         this.height = height;
@@ -54,7 +57,7 @@ public class Player extends AbstractMovingModel {
         this.bodyCollider = bodyCollider;
         this.attackCollider = attackCollider;
         this.erenAttackSound = erenAttackSound;
-        this.erenDeathSounds = erenDeathSounds;
+        this.deathSounds = deathSounds;
     }
 
     public void update(float delta) {
@@ -148,5 +151,12 @@ public class Player extends AbstractMovingModel {
         shapeRenderer.rect(attackCollider.x, attackCollider.y, attackCollider.width, attackCollider.height);
         shapeRenderer.setColor(Color.GREEN);
         shapeRenderer.rect(bodyCollider.x, bodyCollider.y, bodyCollider.width, bodyCollider.height);
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+
+        int randomNumber = random.nextInt(deathSounds.length);
+        deathSounds[randomNumber].play();
     }
 }

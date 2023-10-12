@@ -134,6 +134,7 @@ public class EnemyBuilder {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat3Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
+
         return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
