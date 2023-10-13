@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Rectangle;
 import com.hescha.game.model.Enemy;
 
+import java.util.List;
 import java.util.Random;
 
 public class EnemyBuilder {
@@ -124,7 +125,7 @@ public class EnemyBuilder {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat2Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width, height, speed1,
+        return new Enemy(width+10, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
@@ -135,7 +136,7 @@ public class EnemyBuilder {
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
 
-        return new Enemy(width, height, speed1,
+        return new Enemy(width+20, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
@@ -219,11 +220,13 @@ public class EnemyBuilder {
     }
 
     private static Rectangle getDeathCollider() {
-        return new Rectangle(0, 0, width / 2.5f, height / 6);
+        return new Rectangle(width / 3.5f, height*0.5F, width / 2.5f, height / 6);
     }
 
-    private static Rectangle getBodyCollider() {
-        return new Rectangle(0, 0, width / 3, height * 0.7f);
+    private static List<Rectangle> getBodyCollider() {
+        Rectangle rectangle1 = new Rectangle(width / 3, 0, width / 3, height*0.5F);
+        Rectangle rectangle2 = new Rectangle(width / 3,height*0.5F+height/6,width / 3,width / 4);
+        return List.of(rectangle1, rectangle2);
     }
 
 
