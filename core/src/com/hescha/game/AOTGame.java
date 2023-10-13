@@ -13,7 +13,7 @@ public class AOTGame extends Game {
     @Override
     public void create() {
         game = this;
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mid"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mp3"));
         music.play();
         music.setLooping(true);
         setScreen(new GameScreen());
