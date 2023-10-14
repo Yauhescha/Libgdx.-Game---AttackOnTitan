@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Rectangle;
-import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
 
 import java.util.Random;
@@ -33,6 +32,15 @@ public class PlayerBuilder {
             new Texture("player/eren/attack/attack (1).png"),
             new Texture("player/eren/attack/attack (2).png")
     };
+    private static final Texture[] erenDeadTextures = {
+            new Texture("player/eren/dead/1.png"),
+            new Texture("player/eren/dead/2.png"),
+            new Texture("player/eren/dead/3.png"),
+            new Texture("player/eren/dead/4.png"),
+            new Texture("player/eren/dead/5.png"),
+            new Texture("player/eren/dead/6.png"),
+            new Texture("player/eren/dead/7.png")
+    };
     private static final Music[] erenDeathSounds = new Music[]{
             Gdx.audio.newMusic(Gdx.files.internal("player/eren/sound/dead1.wav")),
             Gdx.audio.newMusic(Gdx.files.internal("player/eren/sound/dead2.wav")),
@@ -46,6 +54,14 @@ public class PlayerBuilder {
             new Texture("player/armin/attack/2.png"),
             new Texture("player/armin/attack/3.png")
     };
+    private static final Texture[] arminDeadTextures = {
+            new Texture("player/armin/dead/1.png"),
+            new Texture("player/armin/dead/2.png"),
+            new Texture("player/armin/dead/3.png"),
+            new Texture("player/armin/dead/4.png"),
+            new Texture("player/armin/dead/5.png"),
+            new Texture("player/armin/dead/6.png")
+    };
     private static final Music[] arminDeathSounds = new Music[]{
             Gdx.audio.newMusic(Gdx.files.internal("player/armin/sound/dead1.wav")),
             Gdx.audio.newMusic(Gdx.files.internal("player/armin/sound/dead2.wav"))
@@ -58,6 +74,14 @@ public class PlayerBuilder {
             new Texture("player/bertholdt/attack/2.png"),
             new Texture("player/bertholdt/attack/3.png")
     };
+    private static final Texture[] bertholdDeadTextures = {
+            new Texture("player/bertholdt/dead/1.png"),
+            new Texture("player/bertholdt/dead/2.png"),
+            new Texture("player/bertholdt/dead/3.png"),
+            new Texture("player/bertholdt/dead/4.png"),
+            new Texture("player/bertholdt/dead/5.png"),
+            new Texture("player/bertholdt/dead/6.png")
+    };
     private static final Music[] bertholdDeathSounds = new Music[]{
             Gdx.audio.newMusic(Gdx.files.internal("player/bertholdt/sound/1.wav")),
             Gdx.audio.newMusic(Gdx.files.internal("player/bertholdt/sound/2.wav")),
@@ -65,11 +89,11 @@ public class PlayerBuilder {
     };
 
 
-
     public static Player buildEren() {
         Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
         Animation<Texture> erenFlyingEffectAnimation = new Animation<>(0.1f, flyingEffectTextures);
         Animation<Texture> erenAttackAnimation = new Animation<>(0.1f, erenAttackTextures);
+        Animation<Texture> deadAnimation = new Animation<>(0.1f, erenDeadTextures);
 
         int width = 80;
         int height = 120;
@@ -80,7 +104,7 @@ public class PlayerBuilder {
         Player player = new Player(erenStandTexture, width, height, speed,
                 erenFlyingEffectAnimation, erenAttackAnimation, attackEffectAnimation,
                 bodyCollider, attackCollider,
-                attackSound, erenDeathSounds);
+                attackSound, erenDeathSounds, deadAnimation);
 
         return player;
     }
@@ -89,6 +113,7 @@ public class PlayerBuilder {
         Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
         Animation<Texture> flyingEffectAnimation = new Animation<>(0.1f, flyingEffectTextures);
         Animation<Texture> attackAnimation = new Animation<>(0.1f, arminAttackTextures);
+        Animation<Texture> deadAnimation = new Animation<>(0.1f, arminDeadTextures);
 
         int width = 80;
         int height = 120;
@@ -99,7 +124,7 @@ public class PlayerBuilder {
         Player player = new Player(arminStandTexture, width, height, speed,
                 flyingEffectAnimation, attackAnimation, attackEffectAnimation,
                 bodyCollider, attackCollider,
-                attackSound, arminDeathSounds);
+                attackSound, arminDeathSounds, deadAnimation);
 
         return player;
     }
@@ -108,6 +133,7 @@ public class PlayerBuilder {
         Animation<Texture> attackEffectAnimation = new Animation<>(0.1f, attackEffectTextures);
         Animation<Texture> flyingEffectAnimation = new Animation<>(0.1f, flyingEffectTextures);
         Animation<Texture> attackAnimation = new Animation<>(0.1f, bertholdAttackTextures);
+        Animation<Texture> deadAnimation = new Animation<>(0.1f, bertholdDeadTextures);
 
         int width = 80;
         int height = 120;
@@ -118,7 +144,7 @@ public class PlayerBuilder {
         Player player = new Player(bertholdStandTexture, width, height, speed,
                 flyingEffectAnimation, attackAnimation, attackEffectAnimation,
                 bodyCollider, attackCollider,
-                attackSound, bertholdDeathSounds);
+                attackSound, bertholdDeathSounds, deadAnimation);
 
         return player;
     }

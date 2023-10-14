@@ -23,6 +23,7 @@ public class Player extends AbstractMovingModel {
     private final Animation<Texture> flyingEffectAnimation;
     private final Animation<Texture> attackAnimation;
     private final Animation<Texture> attackEffectAnimation;
+    private final Animation<Texture> deadAnimation;
     private final Rectangle bodyCollider;
     private final Rectangle attackCollider;
     private final Music erenAttackSound;
@@ -46,7 +47,7 @@ public class Player extends AbstractMovingModel {
                   Animation<Texture> attackEffectAnimation,
                   Rectangle bodyCollider,
                   Rectangle attackCollider,
-                  Music erenAttackSound, Music[] deathSounds) {
+                  Music erenAttackSound, Music[] deathSounds, Animation<Texture> deadAnimation) {
         this.texture = texture;
         this.width = width;
         this.height = height;
@@ -58,6 +59,7 @@ public class Player extends AbstractMovingModel {
         this.attackCollider = attackCollider;
         this.erenAttackSound = erenAttackSound;
         this.deathSounds = deathSounds;
+        this.deadAnimation = deadAnimation;
     }
 
     public void update(float delta) {
@@ -65,8 +67,8 @@ public class Player extends AbstractMovingModel {
         flyingStateTime += delta;
         updateCollisionRectangle();
         fifo.forEach(point -> point.y -= 10);
-        if(isSoundAttackPlaying){
-            isSoundAttackPlaying=false;
+        if (isSoundAttackPlaying) {
+            isSoundAttackPlaying = false;
             erenAttackSound.play();
         }
     }
@@ -96,33 +98,41 @@ public class Player extends AbstractMovingModel {
 
     private void moveRight() {
         x += speed;
-        if (x > SCREEN_WIDTH - width) x = SCREEN_WIDTH - width;
+        if (x > SCREEN_WIDTH - width) {
+            x = SCREEN_WIDTH - width;
+        }
     }
 
     private void moveLeft() {
         x -= speed;
-        if (x < 0) x = 0;
+        if (x < 0) {
+            x = 0;
+        }
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime, true);
-        fifo.add(new Point(x + width / 4, y + height / 2, animationFrame));
-        fifo.forEach(point -> batch.draw(point.texture,
-                point.getX(), point.getY(),
-                width / 3, width / 3));
+        if (isAlive) {
+            animationFrame = flyingEffectAnimation.getKeyFrame(flyingStateTime, true);
+            fifo.add(new Point(x + width / 4, y + height / 2, animationFrame));
+            fifo.forEach(point -> batch.draw(point.texture,
+                    point.getX(), point.getY(),
+                    width / 3, width / 3));
 
-
-        if (isAnimationPlaying && !attackAnimation.isAnimationFinished(attackStateTime)) {
-            animationFrame = attackAnimation.getKeyFrame(attackStateTime);
-            super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
-            animationFrame = attackEffectAnimation.getKeyFrame(attackStateTime);
-            super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
+            if (isAnimationPlaying && !attackAnimation.isAnimationFinished(attackStateTime)) {
+                animationFrame = attackAnimation.getKeyFrame(attackStateTime);
+                super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
+                animationFrame = attackEffectAnimation.getKeyFrame(attackStateTime);
+                super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
+            } else {
+                isAnimationPlaying = false;
+                super.draw(batch);
+            }
         } else {
-            isAnimationPlaying = false;
-            super.draw(batch);
+            animationFrame = deadAnimation.getKeyFrame(attackStateTime, false);
+            super.draw(animationFrame, batch, FlipMode.getFlipModeByRightDirection(directionRight));
+            attackStateTime += Gdx.graphics.getDeltaTime();
         }
-
 
     }
 
@@ -155,7 +165,7 @@ public class Player extends AbstractMovingModel {
 
     public void setAlive(boolean alive) {
         isAlive = alive;
-
+        attackStateTime = 0;
         int randomNumber = random.nextInt(deathSounds.length);
         deathSounds[randomNumber].play();
     }

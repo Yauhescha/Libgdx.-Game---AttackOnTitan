@@ -55,7 +55,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-
         //init required technical fields
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -66,7 +65,6 @@ public class GameScreen extends ScreenAdapter {
         viewport.apply(true);
         font = FontUtil.generateFont(Color.BLACK);
         glyphLayout = new GlyphLayout();
-
 
         deathMenuSubscreen = new DeathMenuSubscreen(viewport, batch);
 
@@ -134,7 +132,7 @@ public class GameScreen extends ScreenAdapter {
 
 
     private void update(float delta) {
-        if(!player.isAlive()){
+        if (!player.isAlive()) {
             return;
         }
         //update background
@@ -207,7 +205,7 @@ public class GameScreen extends ScreenAdapter {
 
         batch.end();
 
-        if(!player.isAlive()){
+        if (!player.isAlive()) {
             deathMenuSubscreen.draw();
         }
     }
