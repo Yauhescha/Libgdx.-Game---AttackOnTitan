@@ -164,4 +164,17 @@ public class PlayerBuilder {
                 return buildEren();
         }
     }
+
+    public static Player buildPlayer(PlayerCharacter playerCharacter) {
+        switch (playerCharacter) {
+            case EREN:
+                return buildEren();
+            case ARMIN:
+                return buildArmin();
+            case BERTHOLDT:
+                return buildBerthold();
+            default:
+                return buildEren();
+        }
+    }
 }

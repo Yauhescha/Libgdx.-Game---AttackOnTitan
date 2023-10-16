@@ -3,7 +3,7 @@ package com.hescha.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.hescha.game.screen.GameScreen;
+import com.hescha.game.screen.MainMenuScreen;
 
 public class AOTGame extends Game {
     public static AOTGame game;
@@ -16,6 +16,6 @@ public class AOTGame extends Game {
         music = Gdx.audio.newMusic(Gdx.files.internal("music/theme.mp3"));
         music.play();
         music.setLooping(true);
-        setScreen(new GameScreen());
+        setScreen(new MainMenuScreen());
     }
 }

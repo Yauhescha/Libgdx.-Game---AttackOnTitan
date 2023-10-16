@@ -22,6 +22,7 @@ import com.hescha.game.model.Player;
 import com.hescha.game.util.EnemyBuilder;
 import com.hescha.game.util.FontUtil;
 import com.hescha.game.util.PlayerBuilder;
+import com.hescha.game.util.PlayerCharacter;
 
 import java.util.List;
 import java.util.Timer;
@@ -31,6 +32,7 @@ public class GameScreen extends ScreenAdapter {
     //static data
     public static final Color BACKGROUND_COLOR = new Color(251f / 255f, 208f / 255f, 153f / 255f, 1);
     public static final int FPS_30 = 1 / 30;
+    final PlayerCharacter playerCharacter;
 
     private DeathMenuSubscreen deathMenuSubscreen;
 
@@ -53,6 +55,10 @@ public class GameScreen extends ScreenAdapter {
     private float spawnTime = 5f;
     private int murderCount = 0;
 
+    public GameScreen(PlayerCharacter playerCharacter) {
+        this.playerCharacter=playerCharacter;
+    }
+
     @Override
     public void show() {
         //init required technical fields
@@ -66,10 +72,10 @@ public class GameScreen extends ScreenAdapter {
         font = FontUtil.generateFont(Color.BLACK);
         glyphLayout = new GlyphLayout();
 
-        deathMenuSubscreen = new DeathMenuSubscreen(viewport, batch);
+        deathMenuSubscreen = new DeathMenuSubscreen(viewport, batch, playerCharacter);
 
         // init game related fields
-        player = PlayerBuilder.buildRandomPlayer();
+        player = PlayerBuilder.buildPlayer(playerCharacter);
         toRemoveEnemies = new Array<>();
         enemies = new Array<>();
         enemies.add(EnemyBuilder.randomBuildEnemy());

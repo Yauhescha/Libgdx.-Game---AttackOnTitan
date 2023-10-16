@@ -12,12 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.hescha.game.AOTGame;
 import com.hescha.game.util.FontUtil;
+import com.hescha.game.util.PlayerCharacter;
 
 public class DeathMenuSubscreen {
     private final Stage stage;
     private final BitmapFont font;
 
-    public DeathMenuSubscreen(Viewport viewport, SpriteBatch batch ) {
+    public DeathMenuSubscreen(Viewport viewport, SpriteBatch batch, PlayerCharacter playerCharacter) {
         font = FontUtil.generateFont(Color.BLACK);
 
         TextButton.TextButtonStyle skin = new TextButton.TextButtonStyle();
@@ -38,17 +39,17 @@ public class DeathMenuSubscreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                AOTGame.game.setScreen(new GameScreen());
+                AOTGame.game.setScreen(new GameScreen(playerCharacter));
             }
         });
 
-        TextButton exit = new TextButton("Exit", skin);
+        TextButton exit = new TextButton("Main menu", skin);
         table.add(exit).pad(100).row();
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                Gdx.app.exit();
+                AOTGame.game.setScreen(new MainMenuScreen());
             }
         });
 
