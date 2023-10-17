@@ -233,10 +233,10 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        for (Enemy enemy : enemies) {
-            enemy.drawDebug(shapeRenderer);
-        }
-        player.drawDebug(shapeRenderer);
+//        for (Enemy enemy : enemies) {
+//            enemy.drawDebug(shapeRenderer);
+//        }
+//        player.drawDebug(shapeRenderer);
         player.drawIdleLine(shapeRenderer);
 
         shapeRenderer.end();
