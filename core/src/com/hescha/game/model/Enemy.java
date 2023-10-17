@@ -43,9 +43,8 @@ public class Enemy extends AbstractMovingModel {
         this.bodyCollision = bodyCollision;
         this.deathCollision = deathCollision;
 
-        int possibleWayCount = 5;
         y = Settings.SCREEN_HEIGHT;
-        x = (int) (random.nextInt(possibleWayCount) * width * 0.7f);
+        x = (int) (random.nextInt(Settings.SCREEN_WIDTH-width));
 
         for (Rectangle rectangle : bodyCollision) {
             rectangle.setY(rectangle.getY() + y);
@@ -78,7 +77,7 @@ public class Enemy extends AbstractMovingModel {
         if (isAlive) {
             texture = idleAnimation.getKeyFrame(idleStateTime);
             super.draw(batch);
-            batch.draw(hair, x + width / 4, y + height - width / 1.6f, width / 2, width / 2);
+            batch.draw(hair, x + width / 4, y + height - width / 1.7f, width / 2, width / 2);
         } else {
             texture = deadAnimation.getKeyFrame(idleStateTime);
             super.draw(batch);

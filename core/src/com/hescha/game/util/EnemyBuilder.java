@@ -66,8 +66,6 @@ public class EnemyBuilder {
     private static final int width = 200;
     private static final int height = 300;
     private static final int speed = 8;
-    private static final Rectangle deathCollider = new Rectangle(0, 0, width / 2.5f, height / 6);
-    private static final Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height * 0.7f);
 
     public static final Texture[] hairs = {
             new Texture("enemy/hair/1.png"),
@@ -125,7 +123,7 @@ public class EnemyBuilder {
         Animation<Texture> idleAnimation = new Animation<>(FRAME_DURATION, idleFat2Textures);
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
-        return new Enemy(width+10, height, speed1,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
@@ -136,7 +134,7 @@ public class EnemyBuilder {
         idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
 
-        return new Enemy(width+20, height, speed1,
+        return new Enemy(width, height, speed1,
                 idleAnimation, randomHair(),
                 getBodyCollider(), getDeathCollider());
     }
