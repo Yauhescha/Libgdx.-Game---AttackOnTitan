@@ -1,13 +1,14 @@
 package com.hescha.game.screen;
 
-import static com.hescha.game.util.Settings.GAME_PREFERENCE;
-import static com.hescha.game.util.Settings.MONEY;
 import static com.hescha.game.util.Settings.SKIN;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hescha.game.AOTGame;
+import com.hescha.game.util.FontUtil;
 import com.hescha.game.util.PlayerCharacter;
 
 import java.util.EnumSet;
@@ -29,11 +31,21 @@ public class MainMenuScreen extends ScreenAdapter {
     private Stage stage;
     private Skin skin;
 
-    private Preferences prefs;
+    private BitmapFont font;
+    private GlyphLayout glyphLayout;
 
     @Override
     public void show() {
-        prefs = Gdx.app.getPreferences(GAME_PREFERENCE);
+        font = FontUtil.generateFont(Color.BLACK);
+        glyphLayout = new GlyphLayout();
+        glyphLayout.setText(font, "Max killed: " + AOTGame.getMaxMurderedCount()
+                + ",   Money: " + AOTGame.getMoney());
+        Actor textActor = new Actor() {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                font.draw(batch, glyphLayout, 20, Gdx.graphics.getHeight() - 50);
+            }
+        };
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -43,17 +55,20 @@ public class MainMenuScreen extends ScreenAdapter {
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
+        mainTable.add(textActor).row();
 
         Table characterTable = new Table();
         for (PlayerCharacter playerCharacter : characters) {
             Image characterImage = preparePlayerImage(playerCharacter);
-            Label modelName = new Label(playerCharacter.getName(), skin);
+            Label playerInfo = new Label(playerCharacter.getName() + "\n" +
+                    "Attack radius: " + playerCharacter.getAttackRadius() + "\n" +
+                    "Speed: " + playerCharacter.getSpeed(), skin);
 
             Table individualCharacterTable = new Table();
             individualCharacterTable.add(characterImage).pad(10).row();
-            individualCharacterTable.add(modelName).pad(10).row();
+            individualCharacterTable.add(playerInfo).pad(10).row();
 
-            boolean isPersonBought = prefs.getBoolean(playerCharacter.name());
+            boolean isPersonBought = AOTGame.isPersonBought(playerCharacter);
             if (!isPersonBought) {
                 addBuyButton(playerCharacter, individualCharacterTable);
             } else {
@@ -67,7 +82,16 @@ public class MainMenuScreen extends ScreenAdapter {
         ScrollPane scrollPane = new ScrollPane(characterTable, skin);
         mainTable.add(scrollPane).fill().expand().row();
 
-        // добавьте здесь другие элементы меню, например кнопку "Play" и "Exit"
+
+        TextButton exitButton = new TextButton("Exit", skin);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        mainTable.add(exitButton).pad(30).row();
 
         stage.addActor(mainTable);
     }
@@ -88,7 +112,7 @@ public class MainMenuScreen extends ScreenAdapter {
         Label price = new Label("Price: " + playerCharacter.getPrice(), skin);
         individualCharacterTable.add(price).pad(10).row();
 
-        int money = prefs.getInteger(MONEY);
+        int money = AOTGame.getMoney();
         int characterPrice = playerCharacter.getPrice();
 
         TextButton buyButton = new TextButton("Buy", skin);
@@ -96,10 +120,10 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (money >= characterPrice) {
-                    prefs.putBoolean(playerCharacter.name(), true);
-                    prefs.putInteger(MONEY, money - characterPrice);
-                    prefs.flush();
+                    AOTGame.buyPlayer(playerCharacter);
+                    AOTGame.updateMoney(money - characterPrice);
                     individualCharacterTable.removeActor(buyButton);
+                    addChooseButton(playerCharacter, individualCharacterTable);
                 }
             }
         });

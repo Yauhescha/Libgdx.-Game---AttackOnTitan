@@ -99,7 +99,7 @@ public class PlayerBuilder {
         int height = 120;
         int speed = PlayerCharacter.EREN.speed;
 
-        Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
+        Rectangle attackCollider = getAttackCollider(PlayerCharacter.EREN, width, height / 6);
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
         Player player = new Player(erenStandTexture, width, height, speed,
                 erenFlyingEffectAnimation, erenAttackAnimation, attackEffectAnimation,
@@ -119,7 +119,7 @@ public class PlayerBuilder {
         int height = 120;
         int speed = PlayerCharacter.ARMIN.speed;
 
-        Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
+        Rectangle attackCollider = getAttackCollider(PlayerCharacter.ARMIN, width, height / 6);
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
         Player player = new Player(arminStandTexture, width, height, speed,
                 flyingEffectAnimation, attackAnimation, attackEffectAnimation,
@@ -139,7 +139,7 @@ public class PlayerBuilder {
         int height = 120;
         int speed = PlayerCharacter.BERTHOLDT.speed;
 
-        Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
+        Rectangle attackCollider = getAttackCollider(PlayerCharacter.BERTHOLDT, width, height / 6);
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
         Player player = new Player(bertholdStandTexture, width, height, speed,
                 flyingEffectAnimation, attackAnimation, attackEffectAnimation,
@@ -147,6 +147,10 @@ public class PlayerBuilder {
                 attackSound, bertholdDeathSounds, deadAnimation);
 
         return player;
+    }
+
+    private static Rectangle getAttackCollider(PlayerCharacter playerCharacter, int width, int height) {
+        return new Rectangle(0, 0, playerCharacter.attackRadius, height);
     }
 
     public static Player buildPlayer(PlayerCharacter playerCharacter) {

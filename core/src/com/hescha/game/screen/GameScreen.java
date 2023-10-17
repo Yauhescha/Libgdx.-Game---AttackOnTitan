@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.hescha.game.AOTGame;
 import com.hescha.game.model.Background;
 import com.hescha.game.model.Enemy;
 import com.hescha.game.model.Player;
@@ -53,10 +54,13 @@ public class GameScreen extends ScreenAdapter {
     private float GLOBAL_TIME = 0;
     private final float spawnTimeInitial = 5f;
     private float spawnTime = 5f;
+
     private int murderCount = 0;
+    private int maxMurderCount = 0;
+    private int moneyCount = 0;
 
     public GameScreen(PlayerCharacter playerCharacter) {
-        this.playerCharacter=playerCharacter;
+        this.playerCharacter = playerCharacter;
     }
 
     @Override
@@ -85,6 +89,9 @@ public class GameScreen extends ScreenAdapter {
         player.setX(SCREEN_WIDTH / 2 - player.getWidth() / 2);
         player.setY(SCREEN_HEIGHT / 4);
         player.move(0, 0);
+
+        moneyCount = AOTGame.getMoney();
+        maxMurderCount = AOTGame.getMaxMurderedCount();
     }
 
     @Override
@@ -169,7 +176,7 @@ public class GameScreen extends ScreenAdapter {
         enemies.removeAll(toRemoveEnemies, true);
         toRemoveEnemies.clear();
 
-        glyphLayout.setText(font, murderCount + "");
+        glyphLayout.setText(font, "Killed: " + murderCount + ",     Money: " + moneyCount);
         spawnTime -= delta;
     }
 
@@ -182,6 +189,11 @@ public class GameScreen extends ScreenAdapter {
             player.playAttackAnimation();
             enemy.setAlive(false);
             murderCount++;
+            moneyCount++;
+            AOTGame.updateMoney(moneyCount);
+            if (murderCount > maxMurderCount) {
+                AOTGame.updateMaxMurdered(murderCount);
+            }
         }
 
         boolean bodyToBodyInteraction = enemy.isOverlap(player.getBodyCollider());

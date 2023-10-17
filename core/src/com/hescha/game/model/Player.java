@@ -89,7 +89,7 @@ public class Player extends AbstractMovingModel {
     }
 
     private void updateCollisionRectangle() {
-        attackCollider.setX(x);
+        attackCollider.setX(x + width / 2 - attackCollider.getWidth() / 2);
         attackCollider.setY(y + height / 3);
 
         bodyCollider.setX(x + width / 3);
