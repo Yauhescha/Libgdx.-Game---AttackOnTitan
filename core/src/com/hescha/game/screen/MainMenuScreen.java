@@ -64,12 +64,12 @@ public class MainMenuScreen extends ScreenAdapter {
         subscreen = new MainMenuSubscreen(camera, batch);
 
         glyphLayout = new GlyphLayout();
-        glyphLayout.setText(font, "Max killed: " + AOTGame.getMaxMurderedCount()
-                + ",   Money: " + AOTGame.getMoney());
+        glyphLayout.setText(font, "  Max kills: " + AOTGame.getMaxMurderedCount()
+                + "\n  Money: " + AOTGame.getMoney());
         Actor textActor = new Actor() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                font.draw(batch, glyphLayout, 20, Gdx.graphics.getHeight() - 50);
+                font.draw(batch, glyphLayout, 50, Gdx.graphics.getHeight() - 50);
             }
         };
 
@@ -84,6 +84,8 @@ public class MainMenuScreen extends ScreenAdapter {
         mainTable.add(textActor).row();
 
         Table characterTable = new Table();
+        characterTable.add(new Table()).pad(10, 30, 10, 30);
+
         for (PlayerCharacter playerCharacter : characters) {
             Image characterImage = preparePlayerImage(playerCharacter);
             Label playerInfo = new Label(playerCharacter.getName() + "\n" +
@@ -104,6 +106,7 @@ public class MainMenuScreen extends ScreenAdapter {
             characterTable.add(individualCharacterTable).pad(10, 30, 10, 30);
 
         }
+        characterTable.add(new Table()).pad(10, 30, 10, 30);
 
         ScrollPane scrollPane = new ScrollPane(characterTable, skin);
         mainTable.add(scrollPane).fill().expand().row();

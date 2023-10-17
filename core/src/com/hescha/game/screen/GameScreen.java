@@ -176,7 +176,7 @@ public class GameScreen extends ScreenAdapter {
         enemies.removeAll(toRemoveEnemies, true);
         toRemoveEnemies.clear();
 
-        glyphLayout.setText(font, "Killed: " + murderCount + ",     Money: " + moneyCount);
+        glyphLayout.setText(font, "Kills: " + murderCount + "     Money: " + moneyCount);
         spawnTime -= delta;
     }
 
