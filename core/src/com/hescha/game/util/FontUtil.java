@@ -13,6 +13,8 @@ public class FontUtil {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = size;
         parameter.color = color;
+//        parameter.borderColor = Color.WHITE; // Цвет обводки
+//        parameter.borderWidth = 3; // Толщина обводки
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_NAME));
         BitmapFont font = generator.generateFont(parameter);
