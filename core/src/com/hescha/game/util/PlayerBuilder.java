@@ -97,7 +97,7 @@ public class PlayerBuilder {
 
         int width = 80;
         int height = 120;
-        int speed = 7;
+        int speed = PlayerCharacter.EREN.speed;
 
         Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
@@ -117,7 +117,7 @@ public class PlayerBuilder {
 
         int width = 80;
         int height = 120;
-        int speed = 5;
+        int speed = PlayerCharacter.ARMIN.speed;
 
         Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
@@ -137,7 +137,7 @@ public class PlayerBuilder {
 
         int width = 80;
         int height = 120;
-        int speed = 5;
+        int speed = PlayerCharacter.BERTHOLDT.speed;
 
         Rectangle attackCollider = new Rectangle(0, 0, width, height / 6);
         Rectangle bodyCollider = new Rectangle(0, 0, width / 3, height);
@@ -147,22 +147,6 @@ public class PlayerBuilder {
                 attackSound, bertholdDeathSounds, deadAnimation);
 
         return player;
-    }
-
-
-    public static Player buildRandomPlayer() {
-        int randomNumber = random.nextInt(3);
-
-        switch (randomNumber) {
-            case 0:
-                return buildEren();
-            case 1:
-                return buildArmin();
-            case 2:
-                return buildBerthold();
-            default:
-                return buildEren();
-        }
     }
 
     public static Player buildPlayer(PlayerCharacter playerCharacter) {

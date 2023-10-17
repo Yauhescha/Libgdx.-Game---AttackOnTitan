@@ -10,9 +10,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum PlayerCharacter {
-    EREN("Eren", new Texture(Gdx.files.internal("player/eren/stand.png"))),
-    ARMIN("Armin", new Texture(Gdx.files.internal("player/armin/stand.png"))),
-    BERTHOLDT("Bertholdt", new Texture(Gdx.files.internal("player/bertholdt/stand.png")));
+    ARMIN("Armin", 5, 0,
+            new Texture(Gdx.files.internal("player/armin/stand.png"))),
+    BERTHOLDT("Bertholdt", 6, 10,
+            new Texture(Gdx.files.internal("player/bertholdt/stand.png"))),
+    EREN("Eren", 7, 50,
+            new Texture(Gdx.files.internal("player/eren/stand.png")));
     final String name;
+    final int speed;
+    final int price;
     final Texture texture;
 }
