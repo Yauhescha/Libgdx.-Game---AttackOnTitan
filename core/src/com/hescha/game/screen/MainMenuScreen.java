@@ -69,7 +69,7 @@ public class MainMenuScreen extends ScreenAdapter {
         Actor textActor = new Actor() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                font.draw(batch, glyphLayout, 50, Gdx.graphics.getHeight() - 50);
+                font.draw(batch, glyphLayout, 50, Gdx.graphics.getHeight() - 200);
             }
         };
 

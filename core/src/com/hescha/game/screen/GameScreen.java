@@ -219,7 +219,7 @@ public class GameScreen extends ScreenAdapter {
             enemy.draw(batch);
         }
         player.draw(batch);
-        font.draw(batch, glyphLayout, SCREEN_WIDTH / 2 - glyphLayout.width / 2, SCREEN_HEIGHT - 50);
+        font.draw(batch, glyphLayout, SCREEN_WIDTH / 2 - glyphLayout.width / 2, SCREEN_HEIGHT - 200);
 
         batch.end();
 

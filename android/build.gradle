@@ -30,6 +30,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dependencies {
+        implementation 'com.google.android.gms:play-services-ads:22.5.0'
+    }
 }
 
 
