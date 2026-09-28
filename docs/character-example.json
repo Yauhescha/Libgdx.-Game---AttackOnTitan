@@ -1,0 +1,11 @@
+{
+  "id": "LEVI",
+  "title": "Levi",
+  "assetDir": "levi",
+  "price": 250,
+  "hookForce": 1200,
+  "moveFactor": 1.2,
+  "attackRadius": 80,
+  "attackFrameDuration": 0.08,
+  "deathFrameDuration": 0.1
+}

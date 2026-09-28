@@ -1,92 +1,67 @@
+plugins { id 'com.android.application' }
+
+configurations { natives }
+
 android {
-    namespace "com.hescha.game"
-    buildToolsVersion "33.0.2"
-    compileSdkVersion 33
+    namespace 'com.hescha.aot'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.hescha.game'
+        minSdk 24
+        targetSdk 35
+        versionCode 4
+        versionName '2.0.0'
+        ndk { abiFilters 'armeabi-v7a', 'arm64-v8a' }
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
+            java.setSrcDirs(['src/main/java'])
             assets.srcDirs = ['../assets']
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ["$buildDir/generated/jniLibs"]
         }
+    }
 
-    }
-    packagingOptions {
-        exclude 'META-INF/robovm/ios/robovm.xml'
-    }
-    defaultConfig {
-        applicationId "com.hescha.game"
-        minSdkVersion 24
-        targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
-    }
+    packaging { jniLibs { useLegacyPackaging = false } }
+
     buildTypes {
+        debug { minifyEnabled false }
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            shrinkResources false
         }
     }
-    dependencies {
-        implementation 'com.google.android.gms:play-services-ads:22.5.0'
-    }
+
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17 }
 }
 
+dependencies {
+    implementation project(':core')
+    implementation 'com.badlogicgames.gdx:gdx-backend-android:1.14.2'
+    natives 'com.badlogicgames.gdx:gdx-platform:1.14.2:natives-armeabi-v7a'
+    natives 'com.badlogicgames.gdx:gdx-platform:1.14.2:natives-arm64-v8a'
+}
 
-// called every time gradle gets executed, takes the native dependencies of
-// the natives configuration, and extracts them to the proper libs/ folders
-// so they get packed with the APK.
 tasks.register('copyAndroidNatives') {
-    doFirst {
-        file("libs/armeabi-v7a/").mkdirs()
-        file("libs/arm64-v8a/").mkdirs()
-        file("libs/x86_64/").mkdirs()
-        file("libs/x86/").mkdirs()
-
-        configurations.natives.copy().files.each { jar ->
-            def outputDir = null
-            if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
-            if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-            if (jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
-            if (jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
-            if (outputDir != null) {
+    doLast {
+        def target = layout.buildDirectory.dir('generated/jniLibs').get().asFile
+        delete target
+        target.mkdirs()
+        configurations.natives.files.each { jar ->
+            def abi = jar.name.contains('armeabi-v7a') ? 'armeabi-v7a' : jar.name.contains('arm64-v8a') ? 'arm64-v8a' : null
+            if (abi != null) {
                 copy {
                     from zipTree(jar)
-                    into outputDir
-                    include "*.so"
+                    include '**/*.so'
+                    into new File(target, abi)
+                    eachFile { it.path = it.name }
+                    includeEmptyDirs = false
                 }
             }
         }
     }
 }
-
-tasks.matching { it.name.contains("merge") && it.name.contains("JniLibFolders") }.configureEach { packageTask ->
-    packageTask.dependsOn 'copyAndroidNatives'
-}
-
-tasks.register('run', Exec) {
-    def path
-    def localProperties = project.file("../local.properties")
-    if (localProperties.exists()) {
-        Properties properties = new Properties()
-        localProperties.withInputStream { instr ->
-            properties.load(instr)
-        }
-        def sdkDir = properties.getProperty('sdk.dir')
-        if (sdkDir) {
-            path = sdkDir
-        } else {
-            path = "$System.env.ANDROID_HOME"
-        }
-    } else {
-        path = "$System.env.ANDROID_HOME"
-    }
-
-    def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.hescha.game/com.hescha.game.AndroidLauncher'
-}
-
-eclipse.project.name = appName + "-android"
+preBuild.dependsOn copyAndroidNatives

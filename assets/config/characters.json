@@ -1,0 +1,61 @@
+{
+  "defaultCharacter": "ARMIN",
+  "defaultAttackSound": "player/sound/attack.wav",
+  "defaultDeathSounds": [
+    "audio/death/default1.wav",
+    "audio/death/default2.wav"
+  ],
+  "defaultAttackEffectFrames": [
+    "effect/attack/1.png",
+    "effect/attack/2.png",
+    "effect/attack/3.png"
+  ],
+  "defaultAttackEffectFrameDuration": 0.1,
+  "characters": [
+    {
+      "id": "ARMIN",
+      "title": "Armin",
+      "assetDir": "armin",
+      "price": 0,
+      "hookForce": 930,
+      "moveFactor": 0.94,
+      "attackRadius": 58
+    },
+    {
+      "id": "BERTHOLDT",
+      "title": "Bertholdt",
+      "assetDir": "bertholdt",
+      "price": 20,
+      "hookForce": 880,
+      "moveFactor": 0.9,
+      "attackRadius": 66
+    },
+    {
+      "id": "EREN",
+      "title": "Eren",
+      "assetDir": "eren",
+      "price": 80,
+      "hookForce": 1000,
+      "moveFactor": 1.0,
+      "attackRadius": 72
+    },
+    {
+      "id": "ANNIE",
+      "title": "Annie",
+      "assetDir": "annie",
+      "price": 150,
+      "hookForce": 1040,
+      "moveFactor": 1.04,
+      "attackRadius": 70
+    },
+    {
+      "id": "MIKASA",
+      "title": "Mikasa",
+      "assetDir": "mikasa",
+      "price": 200,
+      "hookForce": 1120,
+      "moveFactor": 1.1,
+      "attackRadius": 78
+    }
+  ]
+}
