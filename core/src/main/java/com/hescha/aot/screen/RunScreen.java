@@ -1,12 +1,5 @@
 package com.hescha.aot.screen;
 
-import static com.hescha.aot.config.GameConfig.HOOK_RANGE;
-import static com.hescha.aot.config.GameConfig.MAX_GAS;
-import static com.hescha.aot.config.GameConfig.PLAYER_H;
-import static com.hescha.aot.config.GameConfig.PLAYER_W;
-import static com.hescha.aot.config.GameConfig.WORLD_H;
-import static com.hescha.aot.config.GameConfig.WORLD_W;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -20,13 +13,10 @@ import com.hescha.aot.AotGame;
 import com.hescha.aot.data.CharacterDef;
 import com.hescha.aot.data.GameMode;
 import com.hescha.aot.domain.GameSession;
-import com.hescha.aot.system.CombatSystem;
-import com.hescha.aot.system.DifficultySystem;
-import com.hescha.aot.system.EnemyMovementSystem;
-import com.hescha.aot.system.MovementSystem;
-import com.hescha.aot.system.PickupSystem;
-import com.hescha.aot.system.SpawnSystem;
+import com.hescha.aot.system.*;
 import com.hescha.aot.ui.UiButton;
+
+import static com.hescha.aot.config.GameConfig.*;
 
 public final class RunScreen extends BaseScreen {
     private static final float STEP = 1f / 120f;
@@ -38,11 +28,11 @@ public final class RunScreen extends BaseScreen {
     private final PickupSystem pickup = new PickupSystem();
     private final CombatSystem combat = new CombatSystem();
     private final DifficultySystem difficulty = new DifficultySystem();
-    private final UiButton menu = new UiButton("MENU", 20, 1190, 140, 65);
-    private final UiButton pauseButton = new UiButton("PAUSE", 560, 1190, 140, 65);
-    private final UiButton resumeButton = new UiButton("RESUME", 190, 650, 340, 85);
-    private final UiButton restart = new UiButton("RESTART", 190, 525, 340, 85);
-    private final UiButton overlayMenu = new UiButton("MENU", 190, 415, 340, 85);
+    private final UiButton menu = new UiButton("MENU", 20, 1190, 155, 72, 1f);
+    private final UiButton pauseButton = new UiButton("PAUSE", 545, 1190, 155, 72, 1f);
+    private final UiButton resumeButton = new UiButton("RESUME", 190, 625, 340, 85, 1.05f);
+    private final UiButton restart = new UiButton("RESTART", 190, 515, 340, 85, 1.05f);
+    private final UiButton overlayMenu = new UiButton("MENU", 190, 405, 340, 85, 1.05f);
     private final Array<SmokePuff> smoke = new Array<>();
     private final Vector2 aim = new Vector2();
     private boolean saved, paused, deathSoundPlayed;
@@ -50,11 +40,7 @@ public final class RunScreen extends BaseScreen {
 
     private static final class SmokePuff {
         float x, y, time;
-
-        SmokePuff(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
+        SmokePuff(float x, float y) { this.x = x; this.y = y; }
     }
 
     public RunScreen(AotGame game) {
@@ -66,15 +52,12 @@ public final class RunScreen extends BaseScreen {
         spawn = new SpawnSystem(game.assets());
     }
 
-    @Override
-    public void show() {
+    @Override public void show() {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
-        game.assets().stopMusic();
+        game.assets().playMusic();
     }
 
-    private boolean ended() {
-        return !session.player.alive || session.finished;
-    }
+    private boolean ended() { return !session.player.alive || session.finished; }
 
     private boolean playingDeathAnimation() {
         return !session.player.alive && session.player.deathTime
@@ -85,52 +68,34 @@ public final class RunScreen extends BaseScreen {
     private boolean input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)
                 || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (ended()) {
-                finishAndMenu();
-                return true;
-            }
+            if (ended()) { finishAndMenu(); return true; }
             setPaused(!paused);
             return false;
         }
         if (Gdx.input.justTouched()) {
             var point = touch();
-            if (menu.hit(point)) {
-                finishAndMenu();
-                return true;
-            }
+            if (menu.hit(point)) { finishAndMenu(); return true; }
             if (!ended() && pauseButton.hit(point)) {
                 setPaused(!paused);
                 return false;
             }
             if (paused || ended()) {
                 if (!paused && playingDeathAnimation()) return false;
-                if (paused && resumeButton.hit(point)) {
-                    setPaused(false);
-                    return false;
-                }
-                if (restart.hit(point)) {
-                    game.setScreen(new RunScreen(game));
-                    return true;
-                }
-                if (overlayMenu.hit(point)) {
-                    finishAndMenu();
-                    return true;
-                }
+                if (paused && resumeButton.hit(point)) { setPaused(false); return false; }
+                if (restart.hit(point)) { game.setScreen(new RunScreen(game)); return true; }
+                if (overlayMenu.hit(point)) { finishAndMenu(); return true; }
                 return false;
             }
-            if (point.x >= 0 && point.x <= WORLD_W && point.y >= 0 && point.y < 1175
+            if (point.x >= 0 && point.x <= WORLD_W && point.y >= 0 && point.y < PLAY_AREA_TOP
                     && session.player.gas > 0) session.player.hook.active = true;
         }
         var player = session.player;
-        if (paused || ended()) {
-            player.hook.stop();
-            return false;
-        }
+        if (paused || ended()) { player.hook.stop(); return false; }
         if (!Gdx.input.isTouched()) player.hook.stop();
         else if (player.hook.active) {
             aim.set(touch());
             aim.x = MathUtils.clamp(aim.x, 0, WORLD_W);
-            aim.y = MathUtils.clamp(aim.y, 0, 1165);
+            aim.y = MathUtils.clamp(aim.y, 0, PLAY_AREA_TOP - PLAYER_H / 2f - 10f);
             aim.sub(player.position).limit(HOOK_RANGE);
             player.hook.anchor.set(player.position).add(aim);
         }
@@ -153,12 +118,13 @@ public final class RunScreen extends BaseScreen {
     private void saveResult() {
         if (saved) return;
         saved = true;
+        // Training never contributes to persistent currency or survival records.
+        if (session.mode == GameMode.TRAINING) return;
         game.save().addCoins(session.player.coins);
         game.save().saveBest(session.player.survivalTime);
     }
 
-    @Override
-    public void render(float delta) {
+    @Override public void render(float delta) {
         if (input()) return;
         if (!paused) {
             accumulator += MathUtils.clamp(delta, 0, .1f);
@@ -175,11 +141,7 @@ public final class RunScreen extends BaseScreen {
         if (ended()) return;
         var player = session.player;
         difficulty.update(session, dt);
-        if (session.finished) {
-            player.hook.stop();
-            saveResult();
-            return;
-        }
+        if (session.finished) { player.hook.stop(); saveResult(); return; }
         spawn.update(session, dt);
         movement.update(player, character, dt);
         if (Math.abs(player.velocity.x) > 5) player.facingRight = player.velocity.x > 0;
@@ -207,8 +169,7 @@ public final class RunScreen extends BaseScreen {
             var enemy = session.enemies.get(i);
             if (enemy.alive) continue;
             enemy.deathTime += dt;
-            if (game.assets().evaporation.isAnimationFinished(enemy.deathTime))
-                session.enemies.removeIndex(i);
+            if (game.assets().evaporation.isAnimationFinished(enemy.deathTime)) session.enemies.removeIndex(i);
         }
         for (int i = smoke.size - 1; i >= 0; i--) {
             var puff = smoke.get(i);
@@ -268,11 +229,10 @@ public final class RunScreen extends BaseScreen {
             shapes.circle(player.hook.anchor.x, player.hook.anchor.y, 7);
         }
         if (session.mode == GameMode.TRAINING) {
-            for (var enemy : session.enemies)
-                if (enemy.alive) {
-                    shapes.setColor(.95f, .55f, .2f, 1);
-                    shapes.rect(enemy.neck.x, enemy.neck.y, enemy.neck.width, enemy.neck.height);
-                }
+            for (var enemy : session.enemies) if (enemy.alive) {
+                shapes.setColor(.95f, .55f, .2f, 1);
+                shapes.rect(enemy.neck.x, enemy.neck.y, enemy.neck.width, enemy.neck.height);
+            }
         }
         shapes.end();
 
@@ -280,7 +240,7 @@ public final class RunScreen extends BaseScreen {
         boolean attacking = player.attackTime < player.attackDuration;
         Texture playerFrame = !player.alive ? assets.characterDeath(character.id).getKeyFrame(player.deathTime, false)
                 : attacking ? assets.characterAttack(character.id).getKeyFrame(player.attackTime, false)
-                  : assets.character(character.id);
+                : assets.character(character.id);
         if (player.invulnerabilityTime > 0) batch.setColor(1, 1, 1, .6f);
         drawPlayerFrame(playerFrame, PLAYER_W, PLAYER_H);
         batch.setColor(Color.WHITE);
@@ -301,66 +261,93 @@ public final class RunScreen extends BaseScreen {
     private void drawHud() {
         var player = session.player;
         var font = game.assets().font;
+        boolean training = session.mode == GameMode.TRAINING;
+        String banner = training ? "TRAINING - NO REWARDS"
+                : session.mode == GameMode.COMBO ? "COMBO x" + player.combo : null;
+        String notice = player.alive && player.gasEndTriggered && player.gas <= 0
+                ? "NO GAS - COLLECT A CANISTER" : refillFlash > 0 ? "GAS REFILLED" : null;
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.03f, .04f, .05f, .92f);
-        shapes.rect(0, 1167, WORLD_W, 113);
+        shapes.setColor(.03f, .04f, .05f, .96f);
+        shapes.rect(0, PLAY_AREA_TOP, WORLD_W, WORLD_H - PLAY_AREA_TOP);
         shapes.setColor(Color.DARK_GRAY);
-        shapes.rect(195, 1203, 330, 18);
+        shapes.rect(195, 1194, 330, 24);
         shapes.setColor(player.gas < 25 ? Color.SCARLET : Color.CYAN);
-        shapes.rect(195, 1203, 330 * MathUtils.clamp(player.gas / MAX_GAS, 0, 1), 18);
+        shapes.rect(195, 1194, 330 * MathUtils.clamp(player.gas / MAX_GAS, 0, 1), 24);
+        if (banner != null) {
+            shapes.setColor(.03f, .04f, .05f, .88f);
+            shapes.rect(20, 1023, 680, 48);
+        }
+        if (notice != null) {
+            shapes.setColor(.03f, .04f, .05f, .94f);
+            shapes.rect(20, 945, 680, 64);
+        }
         shapes.end();
         batch.begin();
-        font.getData().setScale(.48f);
         font.setColor(Color.WHITE);
-        font.draw(batch, "GAS " + (int) player.gas + "%", 195, 1260, 330, Align.center, false);
-        font.draw(batch, "Kills " + player.kills + "    Coins " + player.coins + "    Time "
-                + (int) player.survivalTime + "s", 15, 1150, 690, Align.center, false);
-        if (session.mode == GameMode.COMBO)
-            font.draw(batch, "COMBO x" + player.combo, 0, 1100, WORLD_W, Align.center, false);
-        if (player.alive && player.gasEndTriggered && player.gas <= 0)
-            font.draw(batch, "NO GAS - collect a canister", 0, 1055, WORLD_W, Align.center, false);
-        else if (refillFlash > 0)
-            font.draw(batch, "GAS REFILLED", 0, 1055, WORLD_W, Align.center, false);
+        font.getData().setScale(1.05f);
+        font.draw(batch, "GAS " + (int) player.gas + "%", 195, 1252, 330, Align.center, false);
+        font.getData().setScale(1f);
+        font.draw(batch, "KILLS", 10, 1170, 220, Align.center, false);
+        font.draw(batch, "COINS", 250, 1170, 220, Align.center, false);
+        font.draw(batch, "TIME", 490, 1170, 220, Align.center, false);
+        font.getData().setScale(1.15f);
+        font.draw(batch, Integer.toString(player.kills), 10, 1128, 220, Align.center, false);
+        font.draw(batch, training ? "OFF" : Integer.toString(player.coins), 250, 1128, 220, Align.center, false);
+        font.draw(batch, (int) player.survivalTime + "s", 490, 1128, 220, Align.center, false);
+        if (banner != null) {
+            font.getData().setScale(.95f);
+            font.draw(batch, banner, 30, 1058, 660, Align.center, false);
+        }
+        if (notice != null) {
+            font.getData().setScale(.95f);
+            font.draw(batch, notice, 30, 989, 660, Align.center, false);
+        }
         batch.end();
-        font.getData().setScale(.52f);
         menu.draw(shapes, batch, font);
         if (!ended()) pauseButton.draw(shapes, batch, font);
         font.getData().setScale(.72f);
     }
 
     private void drawOverlay() {
-        // Let the original death animation finish before placing a panel over it.
         if (!paused && playingDeathAnimation()) return;
         var font = game.assets().font;
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.025f, .03f, .04f, .94f);
-        shapes.rect(70, 355, 580, 575);
+        shapes.setColor(.025f, .03f, .04f, .96f);
+        shapes.rect(60, 355, 600, 610);
         shapes.end();
         batch.begin();
         font.setColor(Color.WHITE);
-        font.getData().setScale(.78f);
+        font.getData().setScale(1.2f);
         font.draw(batch, paused ? "PAUSED" : session.won ? "MISSION COMPLETE" : "YOU DIED",
-                80, 870, 560, Align.center, false);
-        font.getData().setScale(.48f);
-        font.draw(batch, "Kills: " + session.player.kills + "    Coins: " + session.player.coins
-                        + "    Time: " + (int) session.player.survivalTime + "s",
-                80, 800, 560, Align.center, false);
+                80, 925, 560, Align.center, false);
+        font.getData().setScale(1f);
+        drawResultRow("KILLS", Integer.toString(session.player.kills), 845);
+        drawResultRow("COINS", session.mode == GameMode.TRAINING ? "NOT SAVED"
+                : Integer.toString(session.player.coins), 800);
+        drawResultRow("TIME", (int) session.player.survivalTime + "s", 755);
         batch.end();
-        font.getData().setScale(.65f);
         if (paused) resumeButton.draw(shapes, batch, font);
         restart.draw(shapes, batch, font);
         overlayMenu.draw(shapes, batch, font);
         font.getData().setScale(.72f);
     }
 
-    @Override
-    public void pause() {
+    private void drawResultRow(String label, String value, float y) {
+        var font = game.assets().font;
+        font.draw(batch, label, 100, y, 240, Align.left, false);
+        font.draw(batch, value, 350, y, 270, Align.right, false);
+    }
+
+    @Override public void resume() {
+        game.assets().playMusic();
+    }
+
+    @Override public void pause() {
         if (!ended()) setPaused(true);
         game.assets().stopEffects();
     }
 
-    @Override
-    public void hide() {
+    @Override public void hide() {
         session.player.hook.stop();
         game.assets().stopEffects();
         Gdx.input.setCatchKey(Input.Keys.BACK, false);

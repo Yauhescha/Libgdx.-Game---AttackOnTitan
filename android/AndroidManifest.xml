@@ -1,19 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
-    <application
-        android:allowBackup="true"
-        android:label="Titan Hook Runner"
-        android:theme="@style/AppTheme"
-        android:extractNativeLibs="false">
-        <activity
-            android:name=".AndroidLauncher"
-            android:screenOrientation="portrait"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
-            android:exported="true">
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <application android:allowBackup="true" android:label="Titan Hook Runner" android:theme="@style/AppTheme" android:extractNativeLibs="false">
+        <activity android:name=".AndroidLauncher" android:screenOrientation="portrait" android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

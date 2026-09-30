@@ -1,8 +1,7 @@
 package com.hescha.aot.system;
 
-import static com.hescha.aot.config.GameConfig.TITAN_H;
-
 import com.hescha.aot.domain.GameSession;
+import static com.hescha.aot.config.GameConfig.*;
 
 public final class EnemyMovementSystem {
     public void update(GameSession session, float dt) {

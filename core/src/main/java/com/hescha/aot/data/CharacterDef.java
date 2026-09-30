@@ -1,12 +1,9 @@
 package com.hescha.aot.data;
 
 import com.badlogic.gdx.utils.JsonValue;
-
 import java.util.Locale;
 
-/**
- * One entry in assets/config/characters.json. IDs also identify saved purchases.
- */
+/** One entry in assets/config/characters.json. IDs also identify saved purchases. */
 public final class CharacterDef {
     public final String id, title, assetDir, stand, attackSound;
     public final int price;
@@ -34,9 +31,7 @@ public final class CharacterDef {
         deathSounds = optionalPaths(json, "deathSounds");
     }
 
-    public String assetPath(String relativePath) {
-        return "player/" + assetDir + "/" + relativePath;
-    }
+    public String assetPath(String relativePath) { return "player/" + assetDir + "/" + relativePath; }
 
     private static String[] optionalPaths(JsonValue json, String field) {
         JsonValue value = json.get(field);

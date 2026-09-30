@@ -1,40 +1,7 @@
 package com.hescha.aot.screen;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Align;
-import com.hescha.aot.AotGame;
-import com.hescha.aot.ui.UiButton;
-
+import com.badlogic.gdx.Gdx; import com.badlogic.gdx.graphics.Color; import com.badlogic.gdx.utils.Align; import com.hescha.aot.AotGame; import com.hescha.aot.ui.UiButton;
 public final class MainMenuScreen extends BaseScreen {
-    private final UiButton play = new UiButton("PLAY", 170, 650, 380, 92), shop = new UiButton("CHARACTERS / SHOP", 170, 530, 380, 92), tutorial = new UiButton("TUTORIAL", 170, 410, 380, 92), exit = new UiButton("EXIT", 170, 290, 380, 92);
-
-    public MainMenuScreen(AotGame g) {
-        super(g);
-    }
-
-    @Override
-    public void render(float d) {
-        begin();
-        batch.begin();
-        batch.setColor(1, 1, 1, .30f);
-        batch.draw(game.assets().street, 0, 0, 720, 1280);
-        batch.setColor(Color.WHITE);
-        game.assets().font.getData().setScale(1.18f);
-        game.assets().font.draw(batch, "TITAN HOOK RUNNER", 0, 1050, 720, Align.center, false);
-        game.assets().font.getData().setScale(.72f);
-        game.assets().font.draw(batch, "Coins: " + game.save().coins() + "   Best: " + (int) game.save().bestSurvival() + "s", 0, 960, 720, Align.center, false);
-        batch.end();
-        play.draw(shapes, batch, game.assets().font);
-        shop.draw(shapes, batch, game.assets().font);
-        tutorial.draw(shapes, batch, game.assets().font);
-        exit.draw(shapes, batch, game.assets().font);
-        if (Gdx.input.justTouched()) {
-            var p = touch();
-            if (play.hit(p)) game.setScreen(new ModeSelectScreen(game));
-            else if (shop.hit(p)) game.setScreen(new CharacterShopScreen(game));
-            else if (tutorial.hit(p)) game.setScreen(new TutorialScreen(game));
-            else if (exit.hit(p)) Gdx.app.exit();
-        }
-    }
+ private final UiButton play=new UiButton("PLAY",170,650,380,92), shop=new UiButton("CHARACTERS / SHOP",170,530,380,92), tutorial=new UiButton("TUTORIAL",170,410,380,92), exit=new UiButton("EXIT",170,290,380,92);
+ public MainMenuScreen(AotGame g){super(g);}
+ @Override public void render(float d){begin();batch.begin();batch.setColor(1,1,1,.30f);batch.draw(game.assets().street,0,0,720,1280);batch.setColor(Color.WHITE);game.assets().font.getData().setScale(1.18f);game.assets().font.draw(batch,"TITAN HOOK RUNNER",0,1050,720,Align.center,false);game.assets().font.getData().setScale(.72f);game.assets().font.draw(batch,"Coins: "+game.save().coins()+"   Best: "+(int)game.save().bestSurvival()+"s",0,960,720,Align.center,false);batch.end();play.draw(shapes,batch,game.assets().font);shop.draw(shapes,batch,game.assets().font);tutorial.draw(shapes,batch,game.assets().font);exit.draw(shapes,batch,game.assets().font);if(Gdx.input.justTouched()){var p=touch();if(play.hit(p))game.setScreen(new ModeSelectScreen(game));else if(shop.hit(p))game.setScreen(new CharacterShopScreen(game));else if(tutorial.hit(p))game.setScreen(new TutorialScreen(game));else if(exit.hit(p))Gdx.app.exit();}}
 }

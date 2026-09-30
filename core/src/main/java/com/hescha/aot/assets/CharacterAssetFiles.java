@@ -2,7 +2,6 @@ package com.hescha.aot.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -10,14 +9,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Uses libGDX internal files, so the same folder layout works inside an Android APK.
- */
+/** Uses libGDX internal files, so the same folder layout works inside an Android APK. */
 final class CharacterAssetFiles {
     private static final Pattern NUMBER = Pattern.compile("\\d+");
-
-    private CharacterAssetFiles() {
-    }
+    private CharacterAssetFiles() { }
 
     static String[] images(String directory) {
         return discover(directory, false, null);

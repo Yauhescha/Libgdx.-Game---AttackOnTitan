@@ -7,14 +7,9 @@ import com.hescha.aot.ui.UiButton;
 
 public final class TutorialScreen extends BaseScreen {
     private final UiButton back = new UiButton("BACK", 20, 40, 180, 70);
+    public TutorialScreen(AotGame game) { super(game); game.save().setTutorialSeen(); }
 
-    public TutorialScreen(AotGame game) {
-        super(game);
-        game.save().setTutorialSeen();
-    }
-
-    @Override
-    public void render(float delta) {
+    @Override public void render(float delta) {
         begin();
         batch.begin();
         var font = game.assets().font;

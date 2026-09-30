@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.Align;
 import com.hescha.aot.AotGame;
 import com.hescha.aot.data.CharacterDef;
 import com.hescha.aot.ui.UiButton;
-
 import java.util.List;
 
 public final class CharacterShopScreen extends BaseScreen {
@@ -29,24 +28,14 @@ public final class CharacterShopScreen extends BaseScreen {
         characters = game.characters().all();
         preview = game.characters().byId(game.save().selectedCharacter());
         page = characters.indexOf(preview) / PAGE_SIZE;
-        for (int i = 0; i < cards.length; i++)
-            cards[i] = new Rectangle(40, 720 - i * 120, 640, 110);
+        for (int i = 0; i < cards.length; i++) cards[i] = new Rectangle(40, 720 - i * 120, 640, 110);
     }
 
-    private int pageCount() {
-        return (characters.size() + PAGE_SIZE - 1) / PAGE_SIZE;
-    }
+    private int pageCount() { return (characters.size() + PAGE_SIZE - 1) / PAGE_SIZE; }
+    private int visibleCount() { return Math.min(PAGE_SIZE, characters.size() - page * PAGE_SIZE); }
+    private CharacterDef characterAt(int row) { return characters.get(page * PAGE_SIZE + row); }
 
-    private int visibleCount() {
-        return Math.min(PAGE_SIZE, characters.size() - page * PAGE_SIZE);
-    }
-
-    private CharacterDef characterAt(int row) {
-        return characters.get(page * PAGE_SIZE + row);
-    }
-
-    @Override
-    public void render(float delta) {
+    @Override public void render(float delta) {
         time += delta;
         begin();
         var font = game.assets().font;
@@ -108,25 +97,15 @@ public final class CharacterShopScreen extends BaseScreen {
 
         if (Gdx.input.justTouched()) {
             var point = touch();
-            if (back.hit(point)) {
-                game.setScreen(new MainMenuScreen(game));
+            if (back.hit(point)) { game.setScreen(new MainMenuScreen(game)); return; }
+            if (page > 0 && previous.hit(point)) { changePage(page - 1); return; }
+            if (page + 1 < pageCount() && next.hit(point)) { changePage(page + 1); return; }
+            for (int i = 0; i < visibleCount(); i++) if (cards[i].contains(point)) {
+                preview = characterAt(i);
+                time = 0;
+                message = "";
                 return;
             }
-            if (page > 0 && previous.hit(point)) {
-                changePage(page - 1);
-                return;
-            }
-            if (page + 1 < pageCount() && next.hit(point)) {
-                changePage(page + 1);
-                return;
-            }
-            for (int i = 0; i < visibleCount(); i++)
-                if (cards[i].contains(point)) {
-                    preview = characterAt(i);
-                    time = 0;
-                    message = "";
-                    return;
-                }
             if (action.contains(point)) {
                 if (game.save().unlocked(preview) || game.save().buy(preview)) {
                     game.save().select(preview.id);

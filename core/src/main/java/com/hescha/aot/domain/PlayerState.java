@@ -1,13 +1,9 @@
 package com.hescha.aot.domain;
 
-import static com.hescha.aot.config.GameConfig.MAX_GAS;
-import static com.hescha.aot.config.GameConfig.PLAYER_H;
-import static com.hescha.aot.config.GameConfig.PLAYER_W;
-import static com.hescha.aot.config.GameConfig.WORLD_W;
-
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import static com.hescha.aot.config.GameConfig.*;
 
 public final class PlayerState {
     public final Vector2 position = new Vector2(WORLD_W / 2f, 180f);

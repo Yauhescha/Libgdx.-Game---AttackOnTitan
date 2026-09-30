@@ -13,6 +13,8 @@ public final class CombatSystem {
             player.comboTimer -= dt;
             if (player.comboTimer <= 0) player.combo = 0;
         }
+        // Respawn protection also disables attacks.
+        if (player.invulnerabilityTime > 0) return 0;
         int killed = 0;
         // Resolve nape strikes first, before body collisions with other enemies.
         for (var enemy : session.enemies) {
@@ -25,13 +27,13 @@ public final class CombatSystem {
                 player.kills++;
                 player.combo++;
                 player.comboTimer = 2.3f;
-                player.coins += session.mode == GameMode.COMBO ? Math.min(5, player.combo) : 1;
+                if (session.mode != GameMode.TRAINING)
+                    player.coins += session.mode == GameMode.COMBO ? Math.min(5, player.combo) : 1;
                 // Keep a running swing intact so all its original frames are visible.
                 if (player.attackTime >= player.attackDuration) player.attackTime = 0;
                 killed++;
             }
         }
-        if (player.invulnerabilityTime > 0) return killed;
         for (var enemy : session.enemies) {
             if (!enemy.alive || !enemy.body.overlaps(player.body)) continue;
             player.hook.stop();
@@ -39,6 +41,10 @@ public final class CombatSystem {
             if (session.mode == GameMode.TRAINING) {
                 player.position.set(360, 180);
                 player.invulnerabilityTime = 1f;
+                player.attackTime = Float.MAX_VALUE;
+                player.combo = 0;
+                player.comboTimer = 0;
+                player.updateBounds(player.attack.radius);
             } else {
                 player.alive = false;
                 player.deathTime = 0;

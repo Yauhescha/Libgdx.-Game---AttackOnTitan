@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.hescha.aot.data.CharacterCatalog;
 import com.hescha.aot.data.CharacterDef;
+import com.hescha.aot.data.CharacterCatalog;
 import com.hescha.aot.domain.EnemyType;
 
 import java.util.ArrayList;
@@ -87,8 +87,7 @@ public final class GameAssets implements Disposable {
     private Animation<Texture> sequence(String pattern, int first, int count,
                                         float frameTime, boolean loop) {
         String[] paths = new String[count];
-        for (int i = 0; i < count; i++)
-            paths[i] = pattern.replace("%d", Integer.toString(first + i));
+        for (int i = 0; i < count; i++) paths[i] = pattern.replace("%d", Integer.toString(first + i));
         return animation(frameTime, loop, paths);
     }
 
@@ -122,7 +121,7 @@ public final class GameAssets implements Disposable {
     }
 
     private Animation<Texture> characterAnimation(CharacterDef character, String directory, String[] explicitFrames,
-                                                  float frameDuration, Texture fallback) {
+                                                   float frameDuration, Texture fallback) {
         String[] paths = framePaths(character, directory, explicitFrames);
         return paths.length == 0 ? new Animation<Texture>(frameDuration, fallback)
                 : animation(frameDuration, false, paths);
@@ -159,33 +158,13 @@ public final class GameAssets implements Disposable {
         for (int i = 1; i <= 18; i++) hairs.add(texture("enemy/hair/" + i + ".png"));
     }
 
-    public Texture character(String id) {
-        return stands.get(characters.byId(id).id);
-    }
-
-    public Animation<Texture> characterAttack(String id) {
-        return attacks.get(characters.byId(id).id);
-    }
-
-    public Animation<Texture> characterDeath(String id) {
-        return deaths.get(characters.byId(id).id);
-    }
-
-    public Animation<Texture> characterAttackEffect(String id) {
-        return attackEffects.get(characters.byId(id).id);
-    }
-
-    public Animation<Texture> titan(EnemyType type) {
-        return titans.get(type);
-    }
-
-    public Texture hair(int i) {
-        return hairs.get(Math.floorMod(i, hairs.size()));
-    }
-
-    public int hairCount() {
-        return hairs.size();
-    }
+    public Texture character(String id) { return stands.get(characters.byId(id).id); }
+    public Animation<Texture> characterAttack(String id) { return attacks.get(characters.byId(id).id); }
+    public Animation<Texture> characterDeath(String id) { return deaths.get(characters.byId(id).id); }
+    public Animation<Texture> characterAttackEffect(String id) { return attackEffects.get(characters.byId(id).id); }
+    public Animation<Texture> titan(EnemyType type) { return titans.get(type); }
+    public Texture hair(int i) { return hairs.get(Math.floorMod(i, hairs.size())); }
+    public int hairCount() { return hairs.size(); }
 
     public void playAttack(String id) {
         Sound clip = attackSounds.get(characters.byId(id).id);
@@ -197,20 +176,11 @@ public final class GameAssets implements Disposable {
         if (clips.length > 0) clips[MathUtils.random(clips.length - 1)].play(.8f);
     }
 
-    public void playMusic() {
-        if (!theme.isPlaying()) theme.play();
-    }
+    public void playMusic() { if (!theme.isPlaying()) theme.play(); }
+    public void stopMusic() { theme.stop(); }
+    public void stopEffects() { for (Sound sound : sounds) sound.stop(); }
 
-    public void stopMusic() {
-        theme.stop();
-    }
-
-    public void stopEffects() {
-        for (Sound sound : sounds) sound.stop();
-    }
-
-    @Override
-    public void dispose() {
+    @Override public void dispose() {
         theme.dispose();
         font.dispose();
         for (Sound sound : sounds) sound.dispose();

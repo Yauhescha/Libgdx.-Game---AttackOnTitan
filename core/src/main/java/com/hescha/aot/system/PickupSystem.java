@@ -1,9 +1,8 @@
 package com.hescha.aot.system;
 
-import static com.hescha.aot.config.GameConfig.MAX_GAS;
-
 import com.badlogic.gdx.math.Intersector;
 import com.hescha.aot.domain.GameSession;
+import static com.hescha.aot.config.GameConfig.*;
 
 public final class PickupSystem {
     public int update(GameSession session) {
